@@ -7,16 +7,15 @@ The System1 CMP Loader is a shim around the [appnexus-cmp](https://github.com/ap
 
 
 - [Terminology](#terminology)
+- [Installation](#installation)
+  - [Quick Start: Install With Script tag](#quick-start-install-with-script-tag)
+  - [Inline: Install with raw loader tag](#inline-install-with-raw-loader-tag)
+  - [Import CMP](#import-cmp)
+- [Roadmap](#roadmap)
 - [System1 CMP Loader API](#system1-cmp-loader-api)
   - [Arguments](#arguments)
   - [Commands](#commands)
   - [Events](#events)
-- [CMPJS Installation](#cmpjs-installation)
-  - [Inline JS Installation](#inline-js-installation)
-    - [1. Bootstrap CMPJS with a small inline script](#1-bootstrap-cmpjs-with-a-small-inline-script)
-    - [2. Start calling commands and integrating](#2-start-calling-commands-and-integrating)
-  - [CMPJS Imports](#cmpjs-imports)
-- [Contributing](#contributing)
   - [Deploy](#deploy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
