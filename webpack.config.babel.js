@@ -190,7 +190,7 @@ module.exports = [
 			new HtmlWebpackPlugin({
 				filename: 's1cmp.html',
 				template: 's1cmp.hbs',
-				inject: false,
+				inject: true,
 				inline: UglifyJS.minify(fs.readFileSync('./src/s1/embed.js', 'utf8')).code,
 				inlineSource: '(embed)',
 			})

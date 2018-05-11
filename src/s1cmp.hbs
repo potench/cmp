@@ -5,7 +5,7 @@
 	<title>System1 CMP</title>
 </head>
 <body>
-
+	<!--//
 	<script>{{{ htmlWebpackPlugin.options.inline }}}</script>
 	<script>
 			cmp('init', {
@@ -25,5 +25,20 @@
 			    console.log("cmpReady", result);
 			});
 	</script>
+	-->
+	<!--
+	<script>
+		cmp('init', {
+			logging: false
+		}).then((result) => {
+			console.log("init complete", result);
+		})
+	</script>
+  -->
+	<!--//
+	<script type="text/javascript" src="https://s.flocdn.com/cmp/s1.cmp.bundle.js">
+		cmp("showConsentTool");
+	</script>
+	//-->
 </body>
 </html>

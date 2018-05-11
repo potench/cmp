@@ -8,7 +8,6 @@
 		return function(scriptSrc) {
 			// 1. already exists, start queueing requests
 			if (window[cmp] && window[__cmp]) {
-				window[cmp].loaded = true;
 				window[cmp] = window[__cmp];
 				return window[cmp];
 			}
@@ -18,7 +17,6 @@
 				window[__cmp] = window[cmp] = window[cmp] ||
 					function(command, parameter, callback) {
 						if (window[__cmp] !== window[cmp]) { // __cmp takes over here
-							window[__cmp].loaded = true;
 							window[cmp] = window[__cmp];
 							return window[cmp].apply(this, arguments);
 						}

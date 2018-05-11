@@ -6,24 +6,24 @@ import { init } from '../lib/init';
 const config = {
 	logging: true
 };
+
 const checkConsentAll = ({ purposeConsents } = {}) => {
-	console.log('checkConsentAll', purposeConsents);
 	const hasPurposeDisabled = Object.keys(purposeConsents).find(key => {
 		return purposeConsents[key] === false;
 	});
-	console.log("hasPurposeDisabled", hasPurposeDisabled);
+	log.debug("hasPurposeDisabled", hasPurposeDisabled);
 	return !hasPurposeDisabled;
 };
 
-const handleConsentResult = (
+const handleConsentResult = ({
 	vendorList = {},
 	vendorConsents = {},
-	callback
-) => {
+	callback,
+	errorMsg = ""
+}) => {
 	const { vendorListVersion: listVersion } = vendorList;
 	const { created, vendorListVersion } = vendorConsents;
 
-	let errorMsg = '';
 	if (!created) {
 		errorMsg = 'No consent data found. Showing consent tool';
 	} else if (!listVersion) {
@@ -35,29 +35,36 @@ const handleConsentResult = (
 	if (errorMsg) {
 		log.debug(errorMsg);
 	}
-	callback({
-		hasConsented: checkConsentAll(vendorConsents),
-		vendorList,
-		vendorConsents,
-		errorMsg
-	});
+
+	if (callback && typeof callback === "function") {
+		callback({
+			hasConsented: checkConsentAll(vendorConsents),
+			vendorList,
+			vendorConsents,
+			errorMsg
+		});
+	}
 };
 
 const checkConsent = (callback = () => {}) => {
-	if (!cmp.loaded) {
+	if (!cmp.isLoaded) {
+		console.log(window.__cmp === window.cmp, cmp === window.cmp, window.__cmp.isLoaded, window.cmp.isLoaded);
 		log.error('CMP failed to load');
-		handleConsentResult(null, null, 'CMP failed to load');
+		handleConsentResult({
+			errorMsg: 'CMP failed to load'
+		});
 	} else if (!window.navigator.cookieEnabled) {
-		handleConsentResult(
-			null,
-			null,
-			'Cookies are disabled. Ignoring CMP consent check'
-		);
+		handleConsentResult({
+			errorMsg: 'Cookies are disabled. Ignoring CMP consent check'
+		});
 	} else {
-		cmp('getVendorList', null, vendorList => {
-			console.log("getVendorList", vendorList);
-			cmp('getVendorConsents', null, vendorConsents => {
-				handleConsentResult(vendorList, vendorConsents, callback);
+		cmp('getVendorList', undefined, vendorList => {
+			cmp('getVendorConsents', undefined, vendorConsents => {
+				handleConsentResult({
+					vendorList,
+					vendorConsents,
+					callback
+				});
 			});
 		});
 	}
@@ -71,7 +78,7 @@ const initialize = (config, callback) => {
 
 // initialize CMP
 (() => {
-	const initIndex = cmp.commandQueue.findIndex(({ command }) => {
+	const initIndex = cmp.commandQueue && cmp.commandQueue.findIndex(({ command }) => {
 		return command === 'init';
 	});
 

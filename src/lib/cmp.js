@@ -169,6 +169,7 @@ export default class Cmp {
 						}, event.origin));
 				}
 				else {
+					console.log("processCommand");
 					this.processCommand(command, parameter, callback);
 				}
 			});

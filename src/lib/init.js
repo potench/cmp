@@ -49,11 +49,11 @@ export function init(configUpdates, __cmp) {
 
 			// Expose `processCommand` as the CMP implementation
 			// window[CMP_GLOBAL_NAME] = cmp.processCommand;
-			__cmp.processCommand = cmp.processCommand;
-
-			// Notify listeners that the CMP is loaded
 			log.debug(`Successfully loaded CMP version: ${pack.version} in ${Date.now() - startTime}ms`);
-			cmp.isLoaded = true;
+
+			__cmp.processCommand = cmp.processCommand;
+			__cmp.isLoaded = cmp.isLoaded = true;
+			// Notify listeners that the CMP is loaded
 			cmp.notify('isLoaded');
 
 			// Render the UI
