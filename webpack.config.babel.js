@@ -172,6 +172,7 @@ const commonConfig = {
 };
 
 module.exports = [
+	// S1 CMP
 	{
 		entry: {
 			cmp: './s1/cmp.js'
