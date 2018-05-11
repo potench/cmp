@@ -55,6 +55,6 @@
 			return cmpShim();
 		});
 	} else {
-		cmpShim('./s1.cmp.bundle.js'); // External script defined here for ease of use
+		cmpShim('./s1.cmp.js'); // External script defined here for ease of use
 	}
 })();

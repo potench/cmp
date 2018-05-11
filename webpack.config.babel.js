@@ -181,7 +181,7 @@ module.exports = [
 		output: {
 			path: path.resolve(__dirname, 'build'),
 			publicPath: './',
-			filename: 's1.[name].bundle.js'
+			filename: 's1.[name].js'
 		},
 		plugins: ([
 			new webpack.DefinePlugin({
@@ -190,7 +190,7 @@ module.exports = [
 			new HtmlWebpackPlugin({
 				filename: 's1cmp.html',
 				template: 's1cmp.hbs',
-				inject: true,
+				inject: false,
 				inline: UglifyJS.minify(fs.readFileSync('./src/s1/embed.js', 'utf8')).code,
 				inlineSource: '(embed)',
 			})

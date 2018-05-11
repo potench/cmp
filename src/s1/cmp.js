@@ -48,7 +48,6 @@ const handleConsentResult = ({
 
 const checkConsent = (callback = () => {}) => {
 	if (!cmp.isLoaded) {
-		console.log(window.__cmp === window.cmp, cmp === window.cmp, window.__cmp.isLoaded, window.cmp.isLoaded);
 		log.error('CMP failed to load');
 		handleConsentResult({
 			errorMsg: 'CMP failed to load'

@@ -35,19 +35,64 @@ There are 3 ways to install and use the System1 CMP Loader depending on your nee
 ## Quick Start: Install With Script tag
 
 ```
-<script type="text/javascript" src="https://s.flocdn.com/cmp/s1.cmp.bundle.js"></script>
+<script type="text/javascript" src="https://s.flocdn.com/cmp/s1.cmp.js">
+	cmp("showConsentTool");
+</script>
 ```
 
 ## Inline: Install with raw loader tag
 
 ```html
-<script>!function(){let e=function(e){return window.cmp&&window.__cmp?(window.cmp.loaded=!0,window.cmp=window.__cmp,window.cmp):function(o,c,n,m,p,d){return console.log(0),o.__cmp=o.cmp=o.cmp||function(e,c,n){return o.__cmp!==o.cmp?(console.log(1),o.__cmp.loaded=!0,o.cmp=o.__cmp,o.cmp.apply(this,arguments)):o.cmp.processCommand&&"function"==typeof o.cmp.processCommand?(console.log(2),void o.cmp.processCommand.apply(this,arguments)):(console.log(3),new Promise(m=>{(o.cmp.commandQueue=o.cmp.commandQueue||[]).push({command:e,parameter:c,callback:()=>m(n())})}))},e&&(p=c.createElement("script"),d=c.getElementsByTagName("script")[0],p.async=1,p.src=e,d.parentNode.insertBefore(p,d)),o.cmp}(window,document)};"undefined"!=typeof module&&void 0!==module.exports?module.exports=e():"function"==typeof define&&define.amd?define([],()=>e()):e("./s1.cmp.bundle.js")}();</script>
-
+<script>!function(){let e=function(e){return window.cmp&&window.__cmp?(window.cmp=window.__cmp,window.cmp):function(m,c,n,p,o,t){return m.__cmp=m.cmp=m.cmp||function(e,c,n){if(m.__cmp!==m.cmp)return m.cmp=m.__cmp,m.cmp.apply(this,arguments);m.cmp.processCommand&&"function"==typeof m.cmp.processCommand?m.cmp.processCommand.apply(this,arguments):(m.cmp.commandQueue=m.cmp.commandQueue||[]).push({command:e,parameter:c,callback:n})},e&&(o=c.createElement("script"),t=c.getElementsByTagName("script")[0],o.async=1,o.src=e,t.parentNode.insertBefore(o,t)),m.cmp}(window,document)};"undefined"!=typeof module&&void 0!==module.exports?module.exports=e():"function"==typeof define&&define.amd?define([],()=>e()):e("https://s.flocdn.com/cmp/s1.cmp.js")}();</script>
 <script>
+		cmp('init', {
+			logging: true
+		}, function(result) {
+			if (!result.hasConsented || result.errorMsg) { // consent not set
+				cmp('showConsentTool');
+			}
+			console.log("init complete", result);
+		});
 
+		cmp('addEventListener', 'onSubmit', function(result) {
+				console.log("onSubmit", result);
+		});
+
+		cmp('addEventListener', 'cmpReady', function(result) {
+				console.log("cmpReady", result);
+		});
 </script>
+```
+## Import CMP
+
+*Work in Progress*
+
+```shell
+yarn add system1-cmp  
+```
+
+```js
+import cmp from 'system1-cmp';
+
+cmp("init", {
+  logger: true
+}, () => {
+  cmp("showConstentTool");
+})
 
 ```
+
+# Roadmap
+
+The goal is to provide a CMP loader that acts as an SDK for integrating the CMP with your website where you might need more support listening for sideEffects.
+
+- [x] Provide a CMP loader that maintains CMP scope after loading
+- [x] Allow `import` of CMP so it can be included in another CMP project as an SDK
+- [x] Allow CMP Loader to be directly inlined for immediate use.
+- [x] Expose `init` function to allow for dynamic configuration
+- [ ] Update `commands` to return Promises
+- [ ] Publish to NPM for import support
+- [ ] Set cookie `gdpr_opt_in` as boolean for user consent to all Purposes/Vendors or not 
 
 
 # System1 CMP Loader API
@@ -85,59 +130,6 @@ cmp(command, [parameter], [callback])
 - `cmpReady`
 - `onSubmit`
 
-# CMPJS Installation
-
-## Inline JS Installation
-
-### 1. Bootstrap CMPJS with a small inline script
-
-You can drop the following `<script>` on your project to create a loader and placeholder that will queue commands until the CMP loads.
-
-```
-// In an HTML File
-
-<script>!function(){let e=function(e){return window.cmp&&window.__cmp?(window.cmp.loaded=!0,window.cmp=window.__cmp,window.cmp):function(o,c,n,m,p,d){return console.log(0),o.__cmp=o.cmp=o.cmp||function(e,c,n){return o.__cmp!==o.cmp?(console.log(1),o.__cmp.loaded=!0,o.cmp=o.__cmp,o.cmp.apply(this,arguments)):o.cmp.processCommand&&"function"==typeof o.cmp.processCommand?(console.log(2),void o.cmp.processCommand.apply(this,arguments)):(console.log(3),new Promise(m=>{(o.cmp.commandQueue=o.cmp.commandQueue||[]).push({command:e,parameter:c,callback:()=>m(n())})}))},e&&(p=c.createElement("script"),d=c.getElementsByTagName("script")[0],p.async=1,p.src=e,d.parentNode.insertBefore(p,d)),o.cmp}(window,document)};"undefined"!=typeof module&&void 0!==module.exports?module.exports=e():"function"==typeof define&&define.amd?define([],()=>e()):e("./s1.cmp.bundle.js")}();</script>
-
-```
-
-### 2. Start calling commands and integrating
-
-GDPR requires the CMP API to be accessible through `window.__cmp`. We've found the dangling `__` breaks most ESLINT rules, so we've made the API available in `__cmp` and `cmp` interchangeably.
-
-```
-<script>
-cmp("init", {
-  logging: true
-}, function () {
-  console.log("callback fires after initialization is complete.")
-  cmp("showConstentTool");
-})
-
-cmp("addEventListener", "isLoaded", () => {
-  console.log("callback after isLoaded event");
-});
-</script>
-```
-
-
-## CMPJS Imports
-
-Alternatively, you can import CMPJS into your JavaScript project.
-```shell
-$ yarn add system1-cmp
-```
-
-```js
-import {cmp} from "system1-cmp";
-
-cmp("init", {
-  logger: true
-}, () => {
-  cmp("showConstentTool");
-})
-```
-
-# Contributing
 
 ## Deploy
 
