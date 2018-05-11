@@ -48,10 +48,8 @@ export function init(configUpdates, __cmp) {
 			const cmp = new Cmp(store);
 
 			// Expose `processCommand` as the CMP implementation
-			console.log("init 1", CMP_GLOBAL_NAME, window.cmp === window.__cmp);
 			// window[CMP_GLOBAL_NAME] = cmp.processCommand;
 			__cmp.processCommand = cmp.processCommand;
-			console.log("init 2", CMP_GLOBAL_NAME, window.cmp === window.__cmp);
 
 			// Notify listeners that the CMP is loaded
 			log.debug(`Successfully loaded CMP version: ${pack.version} in ${Date.now() - startTime}ms`);
@@ -64,7 +62,6 @@ export function init(configUpdates, __cmp) {
 
 
 			// Execute any previously queued command
-			console.log("init:readVendorConsentCookie", commandQueue);
 			cmp.commandQueue = commandQueue;
 			cmp.processCommandQueue();
 
