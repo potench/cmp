@@ -59,6 +59,7 @@ Inline just the CMP Loader
 ```html
 <script>!function(){let e=function(e){return window.cmp&&window.__cmp?(window.cmp=window.__cmp,window.cmp):function(m,c,n,p,o,t){return m.__cmp=m.cmp=m.cmp||function(e,c,n){if(m.__cmp!==m.cmp)return m.cmp=m.__cmp,m.cmp.apply(this,arguments);m.cmp.processCommand&&"function"==typeof m.cmp.processCommand?m.cmp.processCommand.apply(this,arguments):(m.cmp.commandQueue=m.cmp.commandQueue||[]).push({command:e,parameter:c,callback:n})},e&&(o=c.createElement("script"),t=c.getElementsByTagName("script")[0],o.async=1,o.src=e,t.parentNode.insertBefore(o,t)),m.cmp}(window,document)};"undefined"!=typeof module&&void 0!==module.exports?module.exports=e():"function"==typeof define&&define.amd?define([],()=>e()):e("./s1.cmp.js")}();</script>
 ```
+```
 // now you can immediately queue CMP API calls
 cmp('init', {
   logging: false
@@ -94,7 +95,6 @@ cmp("init", {
 }, () => {
   cmp("showConstentTool");
 })
-
 ```
 
 # Roadmap
@@ -108,6 +108,7 @@ The goal is to provide a CMP loader that acts as an SDK for integrating the CMP 
 - [ ] Update `commands` to return Promises
 - [ ] Publish to NPM for import support
 - [ ] Set cookie `gdpr_opt_in` as boolean for user consent to all Purposes/Vendors or not
+- [ ] Add `consentChanged` event to trigger change in consent
 
 
 # System1 CMP Loader API
