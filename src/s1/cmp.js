@@ -57,8 +57,8 @@ const checkConsent = (callback = () => {}) => {
 			errorMsg: 'Cookies are disabled. Ignoring CMP consent check'
 		});
 	} else {
-		cmp('getVendorList', undefined, vendorList => {
-			cmp('getVendorConsents', undefined, vendorConsents => {
+		cmp('getVendorList', null, vendorList => {
+			cmp('getVendorConsents', null, vendorConsents => {
 				handleConsentResult({
 					vendorList,
 					vendorConsents,

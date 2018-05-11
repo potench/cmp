@@ -50,9 +50,9 @@ export function init(configUpdates, __cmp) {
 			// Expose `processCommand` as the CMP implementation
 			// window[CMP_GLOBAL_NAME] = cmp.processCommand;
 			log.debug(`Successfully loaded CMP version: ${pack.version} in ${Date.now() - startTime}ms`);
-
-			__cmp.processCommand = cmp.processCommand;
-			__cmp.isLoaded = cmp.isLoaded = true;
+			console.log("processCommand 1", CMP_GLOBAL_NAME);
+			window[CMP_GLOBAL_NAME].processCommand = cmp.processCommand;
+			window[CMP_GLOBAL_NAME].isLoaded = cmp.isLoaded = true;
 			// Notify listeners that the CMP is loaded
 			cmp.notify('isLoaded');
 

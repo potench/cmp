@@ -33,26 +33,38 @@ The System1 CMP Loader is a shim around the [appnexus-cmp](https://github.com/ap
 
 There are 3 ways to install and use the System1 CMP Loader depending on your needs.
 
-## Quick Start: Install With Script tag
+## Quickstart / Synchronous Loading
 
 ```
-<script type="text/javascript" src="https://s.flocdn.com/cmp/s1.cmp.js">
-	cmp("showConsentTool");
-</script>
+<html>
+<body>
+  <script type="text/javascript" src="https://s.flocdn.com/cmp/s1.cmp.js"></script>
+  <script type="text/javascript">
+    cmp('addEventListener', 'cmpReady', function(result) {
+      console.log("cmpReady", result);
+      cmp("showConsentTool");
+    });
+  </script>
+</body>
+</html>
 ```
 
-## Inline: Install with raw loader tag
+## Inline Install / Async Loading
+
+Inline just the CMP Loader
+
+*Work In Progress*
+*(note)* this code may change to include support for Promise chaining
 
 ```html
-<script>!function(){let e=function(e){return window.cmp&&window.__cmp?(window.cmp=window.__cmp,window.cmp):function(m,c,n,p,o,t){return m.__cmp=m.cmp=m.cmp||function(e,c,n){if(m.__cmp!==m.cmp)return m.cmp=m.__cmp,m.cmp.apply(this,arguments);m.cmp.processCommand&&"function"==typeof m.cmp.processCommand?m.cmp.processCommand.apply(this,arguments):(m.cmp.commandQueue=m.cmp.commandQueue||[]).push({command:e,parameter:c,callback:n})},e&&(o=c.createElement("script"),t=c.getElementsByTagName("script")[0],o.async=1,o.src=e,t.parentNode.insertBefore(o,t)),m.cmp}(window,document)};"undefined"!=typeof module&&void 0!==module.exports?module.exports=e():"function"==typeof define&&define.amd?define([],()=>e()):e("https://s.flocdn.com/cmp/s1.cmp.js")}();</script>
-<script>
+<script>!function(){let e=function(e){return window.cmp&&window.__cmp?(window.cmp=window.__cmp,window.cmp):function(m,c,n,p,o,t){return m.__cmp=m.cmp=m.cmp||function(e,c,n){if(m.__cmp!==m.cmp)return m.cmp=m.__cmp,m.cmp.apply(this,arguments);m.cmp.processCommand&&"function"==typeof m.cmp.processCommand?m.cmp.processCommand.apply(this,arguments):(m.cmp.commandQueue=m.cmp.commandQueue||[]).push({command:e,parameter:c,callback:n})},e&&(o=c.createElement("script"),t=c.getElementsByTagName("script")[0],o.async=1,o.src=e,t.parentNode.insertBefore(o,t)),m.cmp}(window,document)};"undefined"!=typeof module&&void 0!==module.exports?module.exports=e():"function"==typeof define&&define.amd?define([],()=>e()):e("./s1.cmp.js")}();</script>
+```
+// now you can immediately queue CMP API calls
 cmp('init', {
-  logging: true
+  logging: false
 }, function(result) {
-  if (!result.hasConsented || result.errorMsg) { // consent not set
+    console.log("init complete", result);
     cmp('showConsentTool');
-  }
-  console.log("init complete", result);
 });
 
 cmp('addEventListener', 'onSubmit', function(result) {
@@ -64,9 +76,11 @@ cmp('addEventListener', 'cmpReady', function(result) {
 });
 </script>
 ```
+
 ## Import CMP
 
 *Work in Progress*
+*(note)* System1 CMP not published to NPM yet, will update docs when ready.
 
 ```shell
 yarn add system1-cmp  
@@ -132,7 +146,7 @@ cmp(command, [parameter], [callback])
 - `onSubmit`
 
 
-## Deploy
+# Deploy
 
 ```
 aws s3 cp --recursive build/  s3://s1-layout-cdn/cmp
