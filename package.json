@@ -7,6 +7,7 @@
     "start": "serve build -s -c 1",
     "prestart": "npm run build",
     "build": "cross-env NODE_ENV=production webpack --progress",
+    "deploy": "npm run build && aws s3 cp --recursive build/  s3://s1-layout-cdn/cmp",
     "prebuild": "npm run clean && mkdirp build",
     "test": "npm run -s lint && jest --coverage",
     "test:watch": "npm run -s test -- --watch",
