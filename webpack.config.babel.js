@@ -193,7 +193,10 @@ module.exports = [
 				inject: false,
 				inline: UglifyJS.minify(fs.readFileSync('./src/s1/embed.js', 'utf8')).code,
 				inlineSource: '(embed)',
-			})
+			}),
+			new CopyWebpackPlugin([
+				{ from: 'assets', to: '.' },
+			])
 		]).concat(ENV === 'production' ? uglifyPlugin : []),
 	},
 	// CMP config
