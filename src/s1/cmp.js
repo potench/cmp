@@ -1,7 +1,11 @@
 // __cmp('setConsentUiCallback', callback) QUANTCAST
 import cmp from './embed';
 import log from '../lib/log';
+import {readCookie, writeCookie} from "../lib/cookie/cookie";
 import { init } from '../lib/init';
+
+const GDPR_OPT_IN_COOKIE = "gdpr_opt_in";
+const GDPR_OPT_IN_COOKIE_MAX_AGE = 33696000;
 
 const config = {
 	logging: true
@@ -11,7 +15,7 @@ const checkConsentAll = ({ purposeConsents } = {}) => {
 	const hasPurposeDisabled = Object.keys(purposeConsents).find(key => {
 		return purposeConsents[key] === false;
 	});
-	log.debug("hasPurposeDisabled", hasPurposeDisabled);
+	console.log("hasPurposeDisabled", hasPurposeDisabled);
 	return !hasPurposeDisabled;
 };
 
@@ -21,6 +25,7 @@ const handleConsentResult = ({
 	callback,
 	errorMsg = ""
 }) => {
+	const hasConsentedCookie = readCookie(GDPR_OPT_IN_COOKIE);
 	const { vendorListVersion: listVersion } = vendorList;
 	const { created, vendorListVersion } = vendorConsents;
 
@@ -37,12 +42,21 @@ const handleConsentResult = ({
 	}
 
 	if (callback && typeof callback === "function") {
-		callback({
-			hasConsented: checkConsentAll(vendorConsents),
+		// store as 1 or 0
+		const hasConsented = checkConsentAll(vendorConsents) ? "1" : "0";
+		writeCookie(GDPR_OPT_IN_COOKIE, hasConsented, GDPR_OPT_IN_COOKIE_MAX_AGE);
+		const consent = {
+			hasConsented: hasConsented === "1", // flip back to boolean
 			vendorList,
 			vendorConsents,
 			errorMsg
-		});
+		};
+
+		callback(consent);
+
+		if (hasConsented !== hasConsentedCookie) {
+			cmp.notify('consentChanged', consent);
+		}
 	}
 };
 

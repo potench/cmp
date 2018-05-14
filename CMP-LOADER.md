@@ -107,8 +107,9 @@ The goal is to provide a CMP loader that acts as an SDK for integrating the CMP 
 - [x] Expose `init` function to allow for dynamic configuration
 - [ ] Update `commands` to return Promises
 - [ ] Publish to NPM for import support
-- [ ] Set cookie `gdpr_opt_in` as boolean for user consent to all Purposes/Vendors or not
+- [x] Set cookie `gdpr_opt_in` as boolean for user consent to all Purposes/Vendors or not
 - [ ] Add `consentChanged` event to trigger change in consent
+- [ ] Allow customization of location for `pubvendors.json`
 
 
 # System1 CMP Loader API

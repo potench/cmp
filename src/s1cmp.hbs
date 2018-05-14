@@ -9,18 +9,24 @@
 	<script>{{{ htmlWebpackPlugin.options.inline }}}</script>
 	<script>
 			cmp('init', {
-				logging: true
+				logging: false
 			}, function(result) {
 				if (!result.hasConsented || result.errorMsg) { // consent not set
 					cmp('showConsentTool');
 				}
-				console.log("init complete", result);
+			});
+			cmp('addEventListener', 'isLoaded', function(result) {
+			    console.log("isLoaded", result);
+			});
+
+			cmp('addEventListener', 'consentChanged', function(result) {
+			    console.log("consentChanged", result);
 			});
 
 			cmp('addEventListener', 'onSubmit', function(result) {
 			    console.log("onSubmit", result);
 			});
-
+			//
 			cmp('addEventListener', 'cmpReady', function(result) {
 			    console.log("cmpReady", result);
 			});

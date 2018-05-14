@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 import config from './config';
 import log from './log';
 
-const PUB_VENDOR_LOCATION = '/.well-known/pubvendors.json';
+const PUB_VENDOR_LOCATION = `https://s.flocdn.com/cmp/pubvendors.json`;// './pubvendors.json';
 
 /**
  * Fetch the pubvendors.json from the local domain

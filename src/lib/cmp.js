@@ -4,6 +4,8 @@ import {
 	encodeVendorConsentData
 } from './cookie/cookie';
 
+// onSubmit will tell you currebt state;
+// but you need current state after load too right?
 export const CMP_GLOBAL_NAME = '__cmp';
 
 export default class Cmp {
@@ -169,7 +171,6 @@ export default class Cmp {
 						}, event.origin));
 				}
 				else {
-					console.log("processCommand");
 					this.processCommand(command, parameter, callback);
 				}
 			});
