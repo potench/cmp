@@ -11,6 +11,7 @@
 
 	<!--// LOADER //-->
 	<script src="./loader.js"></script>
+
 	<script>
 			const config = {
 				scriptSrc: 'https://s.flocdn.com/cmp/s1.cmp.js',
@@ -47,23 +48,29 @@
 
 	</script>
 
+
 	<!--//
-	</script>
+	<script>
 		cmp('init', {
 			scriptSrc: './s1.cmp.js',
 			countryCode: 'us',
 			logging: false,
 			pubVendorListLocation: './pubvendors.json'
 		}, (result) => {
-			console.log("init complete", result);
+			console.log("init", result);
+			if (result.consentRequired && !result.hasConsented) {
+				cmp('showConsentTool'); // gdpr
+			}
+		});
 
-			// cmp command immediate
-			cmp('addEventListener', 'isLoaded', function(result) {
-					console.log("isLoaded immediate", result);
-			});
+		cmp('addEventListener', 'onSubmit', (result) => {
+			// Turn GA on or off
+			// Turn OMJS on or off
+			//
+			console.log("onSubmit", result);
 		});
 	</script>
-	-->
+	//-->
 
 </body>
 </html>

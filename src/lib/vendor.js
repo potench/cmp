@@ -18,11 +18,12 @@ function fetchPubVendorList() {
  */
 function fetchGlobalVendorList() {
 	const {globalVendorListLocation} = config;
-
 	return (globalVendorListLocation ?
 		fetch(globalVendorListLocation) :
 		Promise.reject('Missing globalVendorListLocation'))
-		.then(res => res.json())
+		.then(res => {
+			return res.json();
+		})
 		.catch(() => {
 			log.error(`Failed to load global vendor list from: ${globalVendorListLocation}`);
 		});

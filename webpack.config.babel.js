@@ -212,7 +212,7 @@ module.exports = [
 			new CopyWebpackPlugin([
 				{ from: 'assets', to: '.' },
 				{
-					from: 'cmp.loader.js',
+					from: 'loader.js',
 					to: '.',
 					transform(content) {
 						// Just want to uglify and copy this file over

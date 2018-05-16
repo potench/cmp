@@ -13,7 +13,10 @@ const defaultConfig = {
 
 const initialize = (config, callback) => {
 	init(config, cmp).then(() => {
-		checkConsent(callback); //
+		cmp('addEventListener', 'onSubmit', () => {
+			checkConsent();
+		});
+		checkConsent(callback);
 	});
 };
 
@@ -25,14 +28,18 @@ const checkHasConsentedAll = ({ purposeConsents } = {}) => {
 };
 
 const checkConsent = (callback = () => {}) => {
+	let errorMsg = "";
 	if (!cmp.isLoaded) {
-		log.error('CMP failed to load');
+		errorMsg = 'CMP failed to load';
+		log.error(errorMsg);
 		handleConsentResult({
-			errorMsg: 'CMP failed to load'
+			errorMsg
 		});
 	} else if (!window.navigator.cookieEnabled) {
+		errorMsg = 'Cookies are disabled. Ignoring CMP consent check';
+		log.error(errorMsg);
 		handleConsentResult({
-			errorMsg: 'Cookies are disabled. Ignoring CMP consent check'
+			errorMsg
 		});
 	} else {
 		cmp('getVendorList', null, vendorList => {
@@ -56,7 +63,6 @@ const handleConsentResult = ({
 	const hasConsentedCookie = readCookie(GDPR_OPT_IN_COOKIE);
 	const { vendorListVersion: listVersion } = vendorList;
 	const { created, vendorListVersion } = vendorConsents;
-
 	if (!created) {
 		errorMsg = 'No consent data found. Showing consent tool';
 	} else if (!listVersion) {
@@ -81,7 +87,7 @@ const handleConsentResult = ({
 			errorMsg
 		};
 
-		callback(consent);
+		callback.call(this, consent);
 
 		if (hasConsented !== hasConsentedCookie) {
 			cmp.notify('consentChanged', consent);

@@ -1,4 +1,3 @@
-
 /**
  * creates and manages global cmp and __cmp objects on window
  * cmp queues incoming requests
@@ -34,7 +33,7 @@
 		'ES',
 		'SE',
 		'GB',
-		'US' // FIXME @charden remove
+		'US'
 	];
 	var log = function(shouldLog, msg) {
 		return shouldLog && window.console && window.console.log && window.console.log(msg);
@@ -48,7 +47,7 @@
 		return function(isModule) {
 			// 1. already exists, start queueing requests
 			if (window[cmp] && window[__cmp]) {
-				// window[cmp] = window[__cmp];
+				window[cmp] = window[__cmp];
 				return window[cmp];
 			}
 
@@ -77,6 +76,12 @@
 						) {
 							window[cmp]['processCommand'].apply(this, arguments);
 						} else {
+							(window[cmp][commandQueue] =
+								window[cmp][commandQueue] || []).push({
+								command,
+								parameter,
+								callback
+							});
 							// if 'init', then we need to load the seed file
 							if (command === 'init') {
 								if (scriptEl) {
@@ -101,12 +106,6 @@
 								scriptEl.src = parameter[scriptSrc];
 								document.body.appendChild(scriptEl);
 							}
-							(window[cmp][commandQueue] =
-								window[cmp][commandQueue] || []).push({
-								command,
-								parameter,
-								callback
-							});
 						}
 					};
 				// 4. return temporay cmp command queue

@@ -128,7 +128,7 @@ cmp('init', config);
 - `scriptSrc`: Required: location of CMP SDK.
 - `countryCode`: Required: This is the user's country code. CMP Loader will only load the CMP SDK if the country code is in the EU.
 - `pubVendorListLocation`: OPTIONAL: location of pub vendor list
-- `globalVendorListLocation`: OPTIONAL: global vendorlist is managed by the IAB.
+- `globalVendorListLocation`: OPTIONAL: global vendorList is managed by the IAB.
 
 ### init: callback
 
