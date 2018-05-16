@@ -19,7 +19,8 @@
 			cmp('init', {
 				scriptSrc: './s1.cmp.js',
 				countryCode: 'us',
-				logging: false
+				logging: false,
+				pubVendorListLocation: './pubvendors.json'
 			}, (result) => {
 				console.log("init complete", result);
 

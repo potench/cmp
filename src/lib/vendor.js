@@ -3,14 +3,12 @@ import 'whatwg-fetch';
 import config from './config';
 import log from './log';
 
-const {pubVendorListLocation} = config;
-const PUB_VENDOR_LOCATION = pubVendorListLocation; // `./pubvendors.json`;// './pubvendors.json';
-
 /**
  * Fetch the pubvendors.json from the local domain
  */
 function fetchPubVendorList() {
-	return fetch(PUB_VENDOR_LOCATION)
+	const {pubVendorListLocation} = config;
+	return fetch(pubVendorListLocation)
 		.then(res => res.json())
 		.catch(() => {});
 }
