@@ -7,7 +7,7 @@ import fs from 'fs';
 // import vendorlistStub
 const fakeScriptSrc = './fake-loader-src.js';
 
-describe.skip('cmpLoader as script', () => {
+describe('cmpLoader as script', () => {
 	let appendChild;
 
 	beforeEach(() => {

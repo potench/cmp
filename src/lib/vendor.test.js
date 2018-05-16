@@ -3,7 +3,7 @@
 import { expect } from 'chai';
 import config from './config';
 
-
+const {pubVendorListLocation} = config;
 jest.mock('./portal');
 const mockPortal = require('./portal');
 
@@ -20,7 +20,7 @@ describe('vendor', () => {
 	it('fetchPubVendorList fetches from `.well-known` URL', (done) => {
 
 		fetchPubVendorList().then(() => {
-			expect(window.fetch.mock.calls[0][0]).to.equal('/.well-known/pubvendors.json');
+			expect(window.fetch.mock.calls[0][0]).to.equal(pubVendorListLocation);
 			done();
 		});
 	});

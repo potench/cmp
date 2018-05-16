@@ -8,23 +8,28 @@ let cmpLoader;
 
 describe('cmpLoader as import', () => {
 	beforeEach(() => {
+		window.fetch = jest.fn().mockImplementation(src => {
+			// TODO: import mocked versions of configured json dependencies
+			return Promise.resolve(src);
+		});
 		cmpLoader = require("../loader");
 	});
 
 	afterEach(() => {
+		window.fetch.mockRestore();
 		cmpLoader = null;
 		global.cmp = null;
 		jest.resetModules();
 	});
 
-	it.skip('requires initialization', done => {
+	it('requires initialization', done => {
 		expect(cmpLoader).to.not.be.undefined;
 		expect(typeof cmpLoader).to.equal('function');
 		// expect commandQueue to not exist
 		done();
 	});
 
-	it.skip('allows you to use cmpLoader as API shim to CMP', done => {
+	it('allows you to use cmpLoader as API shim to CMP', done => {
 		init({}, cmpLoader).then(() => {
 			cmpLoader('showConsentTool', null, result => {
 				expect(result).to.equal(true);
@@ -38,20 +43,12 @@ describe('cmpLoader as import', () => {
 		let appendChild;
 
 		beforeEach(() => {
-			 console.log(111);
-			window.fetch = jest.fn().mockImplementation(src => {
-				console.log("fetch:", src);
-				return Promise.resolve(src);
-			});
-			appendChild = window.document.body.appendChild = jest.fn((dom) => {
-				console.log("require cmp", dom);
+			appendChild = window.document.body.appendChild = jest.fn(() => {
 				require('../s1/cmp'); // need to require this here because there is no built version that we can script load
 			});
 		});
 
 		afterEach(() => {
-			console.log(222);
-			window.fetch.mockRestore();
 			appendChild.mockRestore();
 			jest.resetModules();
 			global.cmp = null;
@@ -65,11 +62,10 @@ describe('cmpLoader as import', () => {
 					countryCode: 'ES'
 				},
 				() => {
-					done();
-					// global.cmp('showConsentTool', null, result => {
-					// 	expect(result).to.equal(true);
-					// 	done();
-					// });
+					global.cmp('showConsentTool', null, result => {
+						expect(result).to.equal(true);
+						done();
+					});
 				}
 			);
 		});

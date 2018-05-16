@@ -85,7 +85,6 @@
 							});
 							// if 'init', then we need to load the seed file
 							if (command === 'init') {
-								console.log("command: init", isModule);
 								if (scriptEl) {
 									return log(parameter[logging], "CMP Error: Only call init once.");
 								}
@@ -98,7 +97,6 @@
 								(scriptEl = document.createElement(script)),
 								scriptEl.async = 1;
 								scriptEl.src = parameter[scriptSrc];
-								console.log("command: append", scriptEl);
 								document.body.appendChild(scriptEl);
 							}
 						}

@@ -96,7 +96,6 @@ const handleConsentResult = ({
 
 	// 1. initialize call was queued from global scope (inline cmpLoader)
 	if (initIndex >= 0 && cmp.commandQueue[initIndex]) {
-		console.log("initalize direct");
 		const [{ parameter: config, callback }] = cmp.commandQueue.splice(
 			initIndex,
 			1
@@ -105,10 +104,8 @@ const handleConsentResult = ({
 
 		// 2. initialize call never queued, so initialize with default Config
 	} else {
-		console.log("initalize auto");
 		initialize(defaultConfig, result => {
 			const { errorMsg } = result;
-			console.log("initialzie complete", result);
 			if (errorMsg) {
 				log.debug(errorMsg);
 				cmp('showConsentTool');

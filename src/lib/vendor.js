@@ -3,7 +3,8 @@ import 'whatwg-fetch';
 import config from './config';
 import log from './log';
 
-const PUB_VENDOR_LOCATION = `./pubvendors.json`;// './pubvendors.json';
+const {pubVendorListLocation} = config;
+const PUB_VENDOR_LOCATION = pubVendorListLocation; // `./pubvendors.json`;// './pubvendors.json';
 
 /**
  * Fetch the pubvendors.json from the local domain
