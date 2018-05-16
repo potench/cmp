@@ -71,10 +71,11 @@ const handleConsentResult = ({
 
 	if (callback && typeof callback === "function") {
 		// store as 1 or 0
-		const hasConsented = checkHasConsentedAll(vendorConsents) ? "1" : "0";
-		writeCookie(GDPR_OPT_IN_COOKIE, hasConsented, GDPR_OPT_IN_COOKIE_MAX_AGE);
+		const hasConsented = checkHasConsentedAll(vendorConsents);
+		writeCookie(GDPR_OPT_IN_COOKIE, hasConsented ? "1" : "0", GDPR_OPT_IN_COOKIE_MAX_AGE);
 		const consent = {
-			hasConsented: hasConsented === "1", // flip back to boolean
+			consentRequired: true,
+			hasConsented,
 			vendorList,
 			vendorConsents,
 			errorMsg

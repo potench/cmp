@@ -77,12 +77,6 @@
 						) {
 							window[cmp]['processCommand'].apply(this, arguments);
 						} else {
-							(window[cmp][commandQueue] =
-								window[cmp][commandQueue] || []).push({
-								command,
-								parameter,
-								callback
-							});
 							// if 'init', then we need to load the seed file
 							if (command === 'init') {
 								if (scriptEl) {
@@ -92,13 +86,27 @@
 									return log(parameter[logging], "CMP Error: Provide src to load CMP. cmp('init', { scriptSrc: './cmp.js'})");
 								}
 								if (parameter[countryCode] && countries.indexOf(parameter[countryCode].toUpperCase()) === -1) {
-									return log(parameter[logging], "CMP Log: \"" + (parameter[countryCode] ? parameter[countryCode].toUpperCase() : "NA") + "\"	: Country Code provided does not need CMP");
+									var errorMsg = "CMP Log: \"" + (parameter[countryCode] ? parameter[countryCode].toUpperCase() : "NA") + "\": Country Code provided does not need CMP";
+									if (callback && typeof callback === "function") {
+										callback.apply(this, [{
+											errorMsg: errorMsg,
+											hasConsented: false,
+											consentRequired: false
+										}]);
+									}
+									return log(parameter[logging], errorMsg);
 								}
 								(scriptEl = document.createElement(script)),
 								scriptEl.async = 1;
 								scriptEl.src = parameter[scriptSrc];
 								document.body.appendChild(scriptEl);
 							}
+							(window[cmp][commandQueue] =
+								window[cmp][commandQueue] || []).push({
+								command,
+								parameter,
+								callback
+							});
 						}
 					};
 				// 4. return temporay cmp command queue

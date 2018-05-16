@@ -100,7 +100,7 @@ You must call `init` explicitly to start the CMP. Otherwise, the CMP Loader will
 cmp('init', config, callback);
 ```
 
-### config
+### init: config
 
 `config` is a required argument of `init`. It allows us to configure/customize the CMP.
 
@@ -108,7 +108,7 @@ Example Configuration:
 
 ```
 const config = {
-	scriptSrc: 'https://s.flocdn.com/cmp/s1.cmp.js',
+	scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
   countryCode: 'ES',
 	logging: false,
 	customPurposeListLocation: './purposes.json',
@@ -125,11 +125,42 @@ const config = {
 cmp('init', config);
 ```
 
-* `scriptSrc`: Required: location of CMP SDK.
-* `countryCode`: Required: This is the user's country code. CMP Loader will only load the CMP SDK if the country code is in the EU.
-* `pubVendorListLocation`: OPTIONAL: location of pub vendor list
-* `globalVendorListLocation`: OPTIONAL: global vendorlist is managed by the IAB.
+- `scriptSrc`: Required: location of CMP SDK.
+- `countryCode`: Required: This is the user's country code. CMP Loader will only load the CMP SDK if the country code is in the EU.
+- `pubVendorListLocation`: OPTIONAL: location of pub vendor list
+- `globalVendorListLocation`: OPTIONAL: global vendorlist is managed by the IAB.
 
+### init: callback
+
+Use the callback to determine if you should show the consent tool or not.
+
+- `errorMsg`: STRING // detail on the result CMP initializing
+- `consentRequired`: BOOLEAN // true if in EU, false if consent not required
+- `hasConsented`: BOOLEAN // true if use has consented to all permissions
+- `vendorConsents`: OBJECT
+- `vendorList`: OBJECT
+
+Callback Example
+
+```
+<script type="text/javascript" src="https://s.flocdn.com/cmp/cmp.loader.js"></script>
+
+cmp('init', {
+	  countryCode: "ES",
+	  scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js'
+  }, (result) => {
+
+		// Consent is required and there was an error
+	  if (result.consentRequired && result.errorMsg) {
+		  cmp('showConsentTool');
+	  }
+
+		// Consent is required and a user has not consented to all permissions
+		if (!result.consentRequired && !result.hasConsented) {
+			cmp('showConsentTool');
+		}
+});
+```
 
 ## Arguments
 
