@@ -41,7 +41,7 @@
 						console.log("isLoaded immediate", result);
 				});
 
-				if (!result.consentRequired && !result.hasConsented) {
+				if (result.consentRequired && !result.hasConsented) {
 					cmp('showConsentTool');
 				}
 			});
