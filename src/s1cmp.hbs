@@ -5,20 +5,41 @@
 	<title>System1 CMP</title>
 </head>
 <body>
-
+	<!--
 	<script>{{{ htmlWebpackPlugin.options.inline }}}</script>
+-->
+	<script src="./loader.js"></script>
 	<script>
+			// 1. cmp has not bootstrapped.
+			// 1. cmp command queued
+			cmp('addEventListener', 'isLoaded', function(result) {
+					console.log("isLoaded queued", result);
+			});
+
 			cmp('init', {
+				scriptSrc: './s1.cmp.js',
+				countryCode: 'us',
 				logging: false
+			}, (result) => {
+				console.log("init complete", result);
+
+				// cmp command immediate
+				cmp('addEventListener', 'isLoaded', function(result) {
+						console.log("isLoaded immediate", result);
+				});
+			});
+
+
+			/*
+			cmp('init', {
+				logging: false,
+				countryCode: 'us'
 			}, function(result) {
+				console.log("init complete", result);
 				if (!result.hasConsented || result.errorMsg) { // consent not set
 					cmp('showConsentTool');
 				}
 			});
-			cmp('addEventListener', 'isLoaded', function(result) {
-			    console.log("isLoaded", result);
-			});
-
 			cmp('addEventListener', 'consentChanged', function(result) {
 			    console.log("consentChanged", result);
 			});
@@ -30,6 +51,7 @@
 			cmp('addEventListener', 'cmpReady', function(result) {
 			    console.log("cmpReady", result);
 			});
+			*/
 	</script>
 
 	<!--

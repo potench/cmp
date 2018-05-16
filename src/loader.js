@@ -1,10 +1,11 @@
+
 /**
  * creates and manages global cmp and __cmp objects on window
  * cmp queues incoming requests
  * once loaded, cmp invokes cmp.processCommand()
  */
 (function() {
-	const countries = [
+	var countries = [
 		'AT',
 		'BE',
 		'BG',
@@ -35,12 +36,19 @@
 		'GB',
 		'US' // FIXME @charden remove
 	];
+	var log = function(shouldLog, msg) {
+		return shouldLog && window.console && window.console.log && window.console.log(msg);
+	};
 
-	let cmpLoader = (function(cmp, __cmp) {
-		return function(scriptSrc, countryCode) {
+	var cmpLoader = (function(cmp, __cmp) {
+		var countryCode = 'countryCode',
+				logging = 'logging',
+				scriptSrc = 'scriptSrc';
+
+		return function(isModule) {
 			// 1. already exists, start queueing requests
 			if (window[cmp] && window[__cmp]) {
-				window[cmp] = window[__cmp];
+				// window[cmp] = window[__cmp];
 				return window[cmp];
 			}
 
@@ -75,18 +83,26 @@
 								parameter,
 								callback
 							});
+							// if 'init', then we need to load the seed file
+							if (command === 'init') {
+								console.log("command: init", isModule);
+								if (scriptEl) {
+									return log(parameter[logging], "CMP Error: Only call init once.");
+								}
+								if (!parameter || !parameter[scriptSrc]) {
+									return log(parameter[logging], "CMP Error: Provide src to load CMP. cmp('init', { scriptSrc: './cmp.js'})");
+								}
+								if (parameter[countryCode] && countries.indexOf(parameter[countryCode].toUpperCase()) === -1) {
+									return log(parameter[logging], "CMP Log: \"" + (parameter[countryCode] ? parameter[countryCode].toUpperCase() : "NA") + "\"	: Country Code provided does not need CMP");
+								}
+								(scriptEl = document.createElement(script)),
+								scriptEl.async = 1;
+								scriptEl.src = parameter[scriptSrc];
+								console.log("command: append", scriptEl);
+								document.body.appendChild(scriptEl);
+							}
 						}
 					};
-
-				// 3. load cmp if script inlined
-				if (countries.indexOf(countryCode) >= 0 && scriptSrc) {
-					(scriptEl = document.createElement(script)),
-					(scriptParentEl = document.getElementsByTagName(script)[0]);
-					scriptEl.async = 1;
-					scriptEl.src = scriptSrc;
-					scriptParentEl.parentNode.insertBefore(scriptEl, scriptParentEl);
-				}
-
 				// 4. return temporay cmp command queue
 				return window[cmp];
 			})(window, document, 'script', 'commandQueue');
@@ -94,12 +110,12 @@
 	})('cmp', '__cmp');
 
 	if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-		module.exports = cmpLoader;
+		module.exports = cmpLoader(true);
 	} else if (typeof define === 'function' && define.amd) {
 		define([], () => {
-			return cmpLoader;
+			return cmpLoader(true);
 		});
 	} else {
-		window.cmpLoader = cmpLoader; // External script defined here for ease of use
+		cmpLoader(false); // External script defined here for ease of use
 	}
 })();
