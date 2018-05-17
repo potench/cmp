@@ -38,7 +38,7 @@ The CMP Loader provides a shim to the CMP SDK. Use the CMP Loader to queue comma
 ```
 <html>
 <body>
-  <script type="text/javascript" src="https://s.flocdn.com/cmp/cmp.loader.js"></script>
+  <script type="text/javascript" src="https://s.flocdn.com/cmp/loader.js"></script>
   <script type="text/javascript">
 		cmp('init', {
 			scriptSrc: './s1.cmp.js',
@@ -143,7 +143,7 @@ Use the callback to determine if you should show the consent tool or not.
 Callback Example
 
 ```
-<script type="text/javascript" src="https://s.flocdn.com/cmp/cmp.loader.js"></script>
+<script type="text/javascript" src="https://s.flocdn.com/cmp/loader.js"></script>
 
 cmp('init', {
 	  countryCode: "ES",
