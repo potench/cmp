@@ -69,7 +69,7 @@ const handleConsentResult = ({
 	// if (vendorListVersion !== listVersion) {
 	// 	errorMsg = `Consent found for version ${vendorListVersion}, but received vendor list version ${listVersion}. Showing consent tool`;
 	// }
-	log.debug("FIXME: Unify pubVendorVersion and globalVendorVersion");
+	log.debug("FIXME: Unify pubVendorVersion and globalVendorVersion", listVersion, vendorListVersion);
 	if (errorMsg) {
 		log.debug(errorMsg);
 	}
@@ -90,7 +90,6 @@ const handleConsentResult = ({
 			vendorConsentData,
 			errorMsg
 		};
-
 		callback.call(this, consent);
 
 		if (hasConsented !== hasConsentedCookie) {

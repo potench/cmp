@@ -59,7 +59,7 @@ describe('cmpLoader as import', () => {
 				'init',
 				{
 					scriptSrc: fakeScriptSrc,
-					countryCode: 'ES'
+					gdprApplies: true
 				},
 				() => {
 					global.cmp('showConsentTool', null, result => {

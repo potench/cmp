@@ -42,6 +42,7 @@ The CMP Loader provides a shim to the CMP SDK. Use the CMP Loader to queue comma
   <script type="text/javascript">
 		var config = {
 			scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
+			countryCode: 'ES',
 			gdprApplies: true,
 			pubVendorListLocation: '//s.flocdn.com/cmp/pubvendors.json', // OPTIONAL, whitelists vendors
 			logging: false,

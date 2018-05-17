@@ -4,43 +4,12 @@
  * once loaded, cmp invokes cmp.processCommand()
  */
 (function() {
-	var countries = [
-		'AT',
-		'BE',
-		'BG',
-		'HR',
-		'CY',
-		'CZ',
-		'DK',
-		'EE',
-		'FI',
-		'FR',
-		'DE',
-		'GR',
-		'HU',
-		'IE',
-		'IT',
-		'LV',
-		'LT',
-		'LU',
-		'MT',
-		'NL',
-		'PL',
-		'PT',
-		'RO',
-		'SK',
-		'SI',
-		'ES',
-		'SE',
-		'GB',
-		'US'
-	];
 	var log = function(shouldLog, msg) {
 		return shouldLog && window.console && window.console.log && window.console.log(msg);
 	};
 
 	var cmpLoader = (function(cmp, __cmp) {
-		var countryCode = 'countryCode',
+		var gdprApplies = 'gdprApplies',
 				logging = 'logging',
 				scriptSrc = 'scriptSrc';
 
@@ -90,16 +59,14 @@
 								if (!parameter || !parameter[scriptSrc]) {
 									return log(parameter[logging], "CMP Error: Provide src to load CMP. cmp('init', { scriptSrc: './cmp.js'})");
 								}
-								if (parameter[countryCode] && countries.indexOf(parameter[countryCode].toUpperCase()) === -1) {
-									var errorMsg = "CMP Log: \"" + (parameter[countryCode] ? parameter[countryCode].toUpperCase() : "NA") + "\": Country Code provided does not need CMP";
+								if (!parameter[gdprApplies]) {
 									if (callback && typeof callback === "function") {
 										callback.apply(this, [{
-											errorMsg: errorMsg,
 											hasConsented: false,
 											consentRequired: false
 										}]);
 									}
-									return log(parameter[logging], errorMsg);
+									return log(parameter[logging], "CMP: gdprApplies turned off so no CMP loaded.");
 								}
 								(scriptEl = document.createElement(script)),
 								scriptEl.async = 1;

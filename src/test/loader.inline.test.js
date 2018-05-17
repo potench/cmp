@@ -8,7 +8,7 @@ import vendorlist from '../docs/assets/vendorlist.json';
 // import vendorlistStub
 const fakeScriptSrc = './fake-loader-src.js';
 
-describe('cmpLoader as script', () => {
+describe('cmpLoader as script tag', () => {
 	let appendChild;
 
 	beforeEach(() => {
@@ -42,29 +42,29 @@ describe('cmpLoader as script', () => {
 		done();
 	});
 
-	it('warns when country code not needed for GDPR', done => {
+	it('warns when gdprApplies is false', done => {
 		const log = jest.spyOn(window.console, 'log');
 		global.cmp('init', {
 			scriptSrc: fakeScriptSrc,
-			countryCode: 'AA',
+			gdprApplies: false,
 			logging: true
 		});
 
 		expect(log.mock.calls).to.have.length(1);
 		expect(log.mock.calls[0][0]).to.contain(
-			'Country Code provided does not need CMP'
+			'gdprApplies turned off so no CMP'
 		);
 
 		log.mockRestore();
 		done();
 	});
 
-	it('appends scriptSrc if countryCode and scriptSrc provided', done => {
+	it('appends scriptSrc if gdprApplies and scriptSrc provided', done => {
 		const createElement = jest.spyOn(window.document, 'createElement');
 
 		global.cmp('init', {
 			scriptSrc: fakeScriptSrc,
-			countryCode: 'ES'
+			gdprApplies: true
 		});
 
 		expect(createElement.mock.calls).to.have.length(1);
@@ -79,13 +79,13 @@ describe('cmpLoader as script', () => {
 		const log = jest.spyOn(window.console, 'log');
 		global.cmp('init', {
 			scriptSrc: fakeScriptSrc,
-			countryCode: 'ES',
+			gdprApplies: true,
 			logging: true
 		});
 
 		global.cmp('init', {
 			scriptSrc: fakeScriptSrc,
-			countryCode: 'ES',
+			gdprApplies: true,
 			logging: true
 		});
 
@@ -123,7 +123,7 @@ describe('cmpLoader as script', () => {
 		it('triggers isLoaded after loading complete CMP', done => {
 			global.cmp('init', {
 				scriptSrc: fakeScriptSrc,
-				countryCode: 'ES'
+				gdprApplies: true
 			});
 
 			global.cmp('addEventListener', 'isLoaded', result => {
@@ -137,7 +137,7 @@ describe('cmpLoader as script', () => {
 				'init',
 				{
 					scriptSrc: fakeScriptSrc,
-					countryCode: 'ES'
+					gdprApplies: true
 				},
 				() => {
 					const init = global.cmp.commandQueue.find(({ command }) => {
@@ -149,7 +149,7 @@ describe('cmpLoader as script', () => {
 			);
 		});
 
-		it.skip('triggers callback on init and isLoaded after loading complete CMP', done => {
+		it('triggers callback on init and isLoaded after loading complete CMP', done => {
 			let count = 0;
 			const callback = () => {
 				count++;
@@ -162,7 +162,7 @@ describe('cmpLoader as script', () => {
 				'init',
 				{
 					scriptSrc: fakeScriptSrc,
-					countryCode: 'ES'
+					gdprApplies: true
 				},
 				callback
 			);
