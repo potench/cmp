@@ -38,32 +38,40 @@ The CMP Loader provides a shim to the CMP SDK. Use the CMP Loader to queue comma
 ```
 <html>
 <body>
-  <script type="text/javascript" src="https://s.flocdn.com/cmp/cmp.loader.js"></script>
+  <script type="text/javascript" src="//s.flocdn.com/cmp/cmp.loader.js"></script>
   <script type="text/javascript">
-		cmp('init', {
-			scriptSrc: './s1.cmp.js',
-			countryCode: 'us',
+		var config = {
+			scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
+			gdprApplies: true,
+			pubVendorListLocation: '//s.flocdn.com/cmp/pubvendors.json', // OPTIONAL, whitelists vendors
 			logging: false,
 			customPurposeListLocation: './purposes.json',
-			globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
-			pubVendorListLocation: 'https://s.flocdn.com/cmp/pubvendors.json',
+			globalVendorListLocation: '//vendorlist.consensu.org/vendorlist.json',
 			globalConsentLocation: './portal.html',
 			storeConsentGlobally: false,
 			storePublisherData: false,
 			localization: {},
 			forceLocale: null,
-			gdprApplies: true,
 			allowedVendorIds: null
-		}, (result) => {
-			console.log("initialization complete");
-		});
+		};
 
-		cmp('addEventListener', 'isLoaded', function(result) {
-				console.log("isLoaded", result);
-		});
+		function checkCookieForConsent() {
+			console.log("cookie", document.cookie);
+			if (document.cookie.indexOf("gdpr_opt_in=1") >= 0) {
+				setTimeout(() => {
+					window.location.reload();
+				}, 0);
+			}
+		}
 
-		cmp('addEventListener', 'onSubmit', function(result) {
-				console.log("onSubmit", result);
+		cmp('init', config, (result) => {
+			if (result.consentRequired) {
+				if (result.errorMsg) {
+					console.log(result);
+					cmp('showConsentTool');
+					cmp('addEventListener', 'onSubmit', checkCookieForConsent);
+				}
+			}
 		});
   </script>
 </body>
@@ -78,11 +86,12 @@ The goal is to provide a CMP loader that acts as an SDK for integrating the CMP 
 - [x] Allow `import` of CMP so it can be included in another CMP project as an SDK
 - [x] Allow CMP Loader to be directly inlined for immediate use.
 - [x] Expose `init` function to allow for dynamic configuration
+- [x] Set cookie `gdpr_opt_in` as boolean for user consent to all Purposes/Vendors or not
+- [x] Allow customization of location for `pubvendors.json`
+- [ ] Return consent object in onSubmit
 - [ ] Update `commands` to return Promises
 - [ ] Publish to NPM for import support
-- [x] Set cookie `gdpr_opt_in` as boolean for user consent to all Purposes/Vendors or not
 - [ ] Add `consentChanged` event to trigger change in consent
-- [x] Allow customization of location for `pubvendors.json`
 
 
 # CMP Loader API
@@ -109,24 +118,23 @@ Example Configuration:
 ```
 const config = {
 	scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
-  countryCode: 'ES',
+	gdprApplies: true,
+	pubVendorListLocation: '//s.flocdn.com/cmp/pubvendors.json', // OPTIONAL, whitelists vendors
 	logging: false,
 	customPurposeListLocation: './purposes.json',
-	globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
-	pubVendorListLocation: 'https://s.flocdn.com/cmp/pubvendors.json',
+	globalVendorListLocation: '//vendorlist.consensu.org/vendorlist.json',
 	globalConsentLocation: './portal.html',
 	storeConsentGlobally: false,
 	storePublisherData: false,
 	localization: {},
 	forceLocale: null,
-	gdprApplies: true,
 	allowedVendorIds: null
 }
 cmp('init', config);
 ```
 
-- `scriptSrc`: Required: location of CMP SDK.
-- `countryCode`: Required: This is the user's country code. CMP Loader will only load the CMP SDK if the country code is in the EU.
+- `scriptSrc`: String: Required: location of CMP SDK.
+- `gdprApplies`: Booelan: Enable / disable load of the CMP SDK
 - `pubVendorListLocation`: OPTIONAL: location of pub vendor list
 - `globalVendorListLocation`: OPTIONAL: global vendorList is managed by the IAB.
 
@@ -146,7 +154,7 @@ Callback Example
 <script type="text/javascript" src="https://s.flocdn.com/cmp/cmp.loader.js"></script>
 
 cmp('init', {
-	  countryCode: "ES",
+	  gdprApplies: true,
 	  scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js'
   }, (result) => {
 
@@ -156,7 +164,7 @@ cmp('init', {
 	  }
 
 		// Consent is required and a user has not consented to all permissions
-		if (!result.consentRequired && !result.hasConsented) {
+		if (result.consentRequired && !result.hasConsented) {
 			cmp('showConsentTool');
 		}
 });
@@ -184,6 +192,13 @@ cmp(command, [parameter], [callback])
 - `getConsentData`
 - `getVendorList`
 
+### Examples
+```
+cmp('getVendorConsents', null, (response) => console.log(response));
+cmp('getPublisherConsents', null, (response) => console.log(response));
+cmp('getConsentData', null, (response) => console.log(response));
+cmp('showConsentTool');
+```
 
 ## Events
 
@@ -191,6 +206,11 @@ cmp(command, [parameter], [callback])
 - `cmpReady`
 - `onSubmit`
 
+### Examples
+
+```
+cmp('addEventListener', 'onSubmit', (event) => console.log(event));
+```
 
 # Deploy
 

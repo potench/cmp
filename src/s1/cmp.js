@@ -43,10 +43,10 @@ const checkConsent = (callback = () => {}) => {
 		});
 	} else {
 		cmp('getVendorList', null, vendorList => {
-			cmp('getVendorConsents', null, vendorConsents => {
+			cmp('getVendorConsents', null, vendorConsentData => {
 				handleConsentResult({
 					vendorList,
-					vendorConsents,
+					vendorConsentData,
 					callback
 				});
 			});
@@ -56,34 +56,38 @@ const checkConsent = (callback = () => {}) => {
 
 const handleConsentResult = ({
 	vendorList = {},
-	vendorConsents = {},
+	vendorConsentData = {},
 	callback,
 	errorMsg = ""
 }) => {
 	const hasConsentedCookie = readCookie(GDPR_OPT_IN_COOKIE);
 	const { vendorListVersion: listVersion } = vendorList;
-	const { created, vendorListVersion } = vendorConsents;
+	const { created, vendorListVersion } = vendorConsentData;
 	if (!created) {
 		errorMsg = 'No consent data found. Showing consent tool';
-	} else if (!listVersion) {
-		errorMsg =
-			'Could not determine vendor list version. Not showing consent tool';
-	} else if (vendorListVersion !== listVersion) {
-		errorMsg = `Consent found for version ${vendorListVersion}, but received vendor list version ${listVersion}. Showing consent tool`;
 	}
+	// if (vendorListVersion !== listVersion) {
+	// 	errorMsg = `Consent found for version ${vendorListVersion}, but received vendor list version ${listVersion}. Showing consent tool`;
+	// }
+	log.debug("FIXME: Unify pubVendorVersion and globalVendorVersion");
 	if (errorMsg) {
 		log.debug(errorMsg);
 	}
 
+	// if (!listVersion) {
+	// 	errorMsg =
+	// 		'Could not determine vendor list version. Not showing consent tool';
+	// }
+
 	if (callback && typeof callback === "function") {
 		// store as 1 or 0
-		const hasConsented = checkHasConsentedAll(vendorConsents);
+		const hasConsented = checkHasConsentedAll(vendorConsentData);
 		writeCookie(GDPR_OPT_IN_COOKIE, hasConsented ? "1" : "0", GDPR_OPT_IN_COOKIE_MAX_AGE);
 		const consent = {
 			consentRequired: true,
 			hasConsented,
 			vendorList,
-			vendorConsents,
+			vendorConsentData,
 			errorMsg
 		};
 

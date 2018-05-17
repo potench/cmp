@@ -13,38 +13,45 @@
 	<script src="./loader.js"></script>
 
 	<script>
-			const config = {
-				scriptSrc: 'https://s.flocdn.com/cmp/s1.cmp.js',
-				countryCode: 'ES',
-				logging: false,
-				customPurposeListLocation: './purposes.json',
-				globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
-				pubVendorListLocation: 'https://s.flocdn.com/cmp/pubvendors.json',
-				globalConsentLocation: './portal.html',
-				storeConsentGlobally: false,
-				storePublisherData: false,
-				localization: {},
-				forceLocale: null,
-				gdprApplies: true,
-				allowedVendorIds: null
+		const config = {
+			scriptSrc: window.location.search.indexOf("remote=true") >= 0 ? 'https://s.flocdn.com/cmp/s1.cmp.js' : './s1.cmp.js',
+			// scriptSrc: './s1.cmp.js',
+			// countryCode: 'us',
+			// logging: false,
+			// pubVendorListLocation: './pubvendors.json',
+			// pubVendorListLocation: 'https://s.flocdn.com/cmp/pubvendors.json',
+			// countryCode: 'ES',
+			logging: false,
+			customPurposeListLocation: './purposes.json',
+			globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
+			globalConsentLocation: './portal.html',
+			storeConsentGlobally: false,
+			storePublisherData: false,
+			localization: {},
+			forceLocale: null,
+			gdprApplies: true,
+			allowedVendorIds: null
+		}
+
+		function checkCookieForConsent() {
+			console.log("cookie", document.cookie);
+			if (document.cookie.indexOf("gdpr_opt_in=1") >= 0) {
+				setTimeout(() => {
+					console.log("cookie", document.cookie);
+					// window.location.reload();
+				}, 100)
 			}
+		}
 
-			cmp('addEventListener', 'isLoaded', function(result) {
-					console.log("isLoaded queued", result);
-			});
-
-			cmp('init', config, (result) => {
-				console.log("init complete", result);
-
-				// cmp command immediate
-				cmp('addEventListener', 'isLoaded', function(result) {
-						console.log("isLoaded immediate", result);
-				});
-
-				if (result.consentRequired && !result.hasConsented) {
+		cmp('init', config, (result) => {
+			if (result.consentRequired) {
+				if (result.errorMsg) {
+					console.log(result);
 					cmp('showConsentTool');
+					cmp('addEventListener', 'onSubmit', checkCookieForConsent);
 				}
-			});
+			}
+		});
 
 	</script>
 

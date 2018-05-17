@@ -331,7 +331,6 @@ export default class Store {
 	};
 
 	updateVendorList = vendorList => {
-
 		const {
 			pubVendorsList = {},
 			allowedVendorIds

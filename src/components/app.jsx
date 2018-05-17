@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import style from './app.less';
-
 import Popup from './popup/popup';
 import Footer from './footer/footer';
 

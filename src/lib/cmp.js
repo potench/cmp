@@ -4,8 +4,6 @@ import {
 	encodeVendorConsentData
 } from './cookie/cookie';
 
-// onSubmit will tell you currebt state;
-// but you need current state after load too right?
 export const CMP_GLOBAL_NAME = '__cmp';
 
 export default class Cmp {
@@ -16,6 +14,8 @@ export default class Cmp {
 		this.store = store;
 		this.processCommand.receiveMessage = this.receiveMessage;
 		this.commandQueue = [];
+
+		Object.assign(this, this.commands);
 	}
 
 	commands = {
@@ -224,7 +224,7 @@ export default class Cmp {
 	 * @param {*} data Data that will be passed to each callback
 	 */
 	notify = (event, data) => {
-		log.info(`Notify event: ${event}`);
+		log.info(`Notify event: ${event}`, data);
 		const eventSet = this.eventListeners[event] || new Set();
 		eventSet.forEach(listener => {
 			listener({event, data});
