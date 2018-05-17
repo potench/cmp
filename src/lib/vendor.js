@@ -8,6 +8,9 @@ import log from './log';
  */
 function fetchPubVendorList() {
 	const {pubVendorListLocation} = config;
+	if (!pubVendorListLocation) {
+		return Promise.resolve();
+	}
 	return fetch(pubVendorListLocation)
 		.then(res => res.json())
 		.catch(() => {});
