@@ -40,47 +40,47 @@ The CMP Loader provides a shim to the CMP SDK. Use the CMP Loader to queue comma
 <body>
   <script type="text/javascript" src="//s.flocdn.com/cmp/cmp.loader.js"></script>
   <script type="text/javascript">
-		const config = {
-		  scriptSrc: 'https://s.flocdn.com/cmp/s1.cmp.js',
-		  gdprApplies: true,
-		  // logging: true,
-		  // pubVendorListLocation: '/.well-known/pubvendors.json',
-		  // customPurposeListLocation: './purposes.json',
-		  // globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
-		  // globalConsentLocation: './portal.html',
-		  // storeConsentGlobally: false,
-		  // storePublisherData: false,
-		  // localization: {},
-		  // forceLocale: null,
-		  // allowedVendorIds: null
-		}
+  const config = {
+    scriptSrc: 'https://s.flocdn.com/cmp/s1.cmp.js',
+    gdprApplies: true,
+    // logging: true,
+    // pubVendorListLocation: '/.well-known/pubvendors.json',
+    // customPurposeListLocation: './purposes.json',
+    // globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
+    // globalConsentLocation: './portal.html',
+    // storeConsentGlobally: false,
+    // storePublisherData: false,
+    // localization: {},
+    // forceLocale: null,
+    // allowedVendorIds: null
+  }
 
-		function onConsentChanged(result) {
-		  if (document.cookie.indexOf("gdpr_opt_in=1") < 0) {
-		    console.log("all:consent:failed", result);
-		    // window.location.reload();
-		  } else {
-		    console.log("all:consent:succeeded", result);
-		  }
-		}
+  function onConsentChanged(result) {
+    if (document.cookie.indexOf("gdpr_opt_in=1") < 0) {
+      console.log("all:consent:failed", result);
+      // window.location.reload();
+    } else {
+      console.log("all:consent:succeeded", result);
+    }
+  }
 
-		cmp('init', config, (result) => {
-		  if (result.consentRequired) {
-		    if (result.errorMsg) {
-		      cmp('showConsentTool');
-		      cmp('addEventListener', 'onConsentChanged', onConsentChanged);
-		    } else {
-		      // consent achieved
-		      if (document.cookie.indexOf("gdpr_opt_in=1") >= 0) {
-		        console.log("cmp:init: all consent achieved", result);
-		      } else {
-		        console.log("cmp:init: only some consent achieved", result);
-		      }
-		    }
-		  } else {
-		    console.log("cmp:init: consent not required", result);
-		  }
-		});
+  cmp('init', config, (result) => {
+    if (result.consentRequired) {
+      if (result.errorMsg) {
+        cmp('showConsentTool');
+        cmp('addEventListener', 'onConsentChanged', onConsentChanged);
+      } else {
+        // consent achieved
+        if (document.cookie.indexOf("gdpr_opt_in=1") >= 0) {
+          console.log("cmp:init: all consent achieved", result);
+        } else {
+          console.log("cmp:init: only some consent achieved", result);
+        }
+      }
+    } else {
+      console.log("cmp:init: consent not required", result);
+    }
+  });
   </script>
 </body>
 </html>
@@ -125,18 +125,18 @@ Example Configuration:
 
 ```
 const config = {
-	scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
-	gdprApplies: true,
-	pubVendorListLocation: '//s.flocdn.com/cmp/pubvendors.json', // OPTIONAL, whitelists vendors
-	logging: false,
-	customPurposeListLocation: './purposes.json',
-	globalVendorListLocation: '//vendorlist.consensu.org/vendorlist.json',
-	globalConsentLocation: './portal.html',
-	storeConsentGlobally: false,
-	storePublisherData: false,
-	localization: {},
-	forceLocale: null,
-	allowedVendorIds: null
+  scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
+  gdprApplies: true,
+  pubVendorListLocation: '//s.flocdn.com/cmp/pubvendors.json', // OPTIONAL, whitelists vendors
+  logging: false,
+  customPurposeListLocation: './purposes.json',
+  globalVendorListLocation: '//vendorlist.consensu.org/vendorlist.json',
+  globalConsentLocation: './portal.html',
+  storeConsentGlobally: false,
+  storePublisherData: false,
+  localization: {},
+  forceLocale: null,
+  allowedVendorIds: null
 }
 cmp('init', config);
 ```
@@ -162,19 +162,19 @@ Callback Example
 <script type="text/javascript" src="https://s.flocdn.com/cmp/cmp.loader.js"></script>
 
 cmp('init', {
-	  gdprApplies: true,
-	  scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js'
+    gdprApplies: true,
+    scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js'
   }, (result) => {
 
-		// Consent is required and there was an error
-	  if (result.consentRequired && result.errorMsg) {
-		  cmp('showConsentTool');
-	  }
+  // Consent is required and there was an error
+    if (result.consentRequired && result.errorMsg) {
+    cmp('showConsentTool');
+    }
 
-		// Consent is required and a user has not consented to all permissions
-		if (result.consentRequired && !result.hasConsented) {
-			cmp('showConsentTool');
-		}
+  // Consent is required and a user has not consented to all permissions
+  if (result.consentRequired && !result.hasConsented) {
+  cmp('showConsentTool');
+  }
 });
 ```
 
