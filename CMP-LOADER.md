@@ -40,39 +40,46 @@ The CMP Loader provides a shim to the CMP SDK. Use the CMP Loader to queue comma
 <body>
   <script type="text/javascript" src="//s.flocdn.com/cmp/cmp.loader.js"></script>
   <script type="text/javascript">
-		var config = {
-			scriptSrc: '//s.flocdn.com/cmp/s1.cmp.js',
-			countryCode: 'ES',
-			gdprApplies: true,
-			pubVendorListLocation: '//s.flocdn.com/cmp/pubvendors.json', // OPTIONAL, whitelists vendors
-			logging: false,
-			customPurposeListLocation: './purposes.json',
-			globalVendorListLocation: '//vendorlist.consensu.org/vendorlist.json',
-			globalConsentLocation: './portal.html',
-			storeConsentGlobally: false,
-			storePublisherData: false,
-			localization: {},
-			forceLocale: null,
-			allowedVendorIds: null
-		};
+		const config = {
+		  scriptSrc: 'https://s.flocdn.com/cmp/s1.cmp.js',
+		  gdprApplies: true,
+		  // logging: true,
+		  // pubVendorListLocation: '/.well-known/pubvendors.json',
+		  // customPurposeListLocation: './purposes.json',
+		  // globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
+		  // globalConsentLocation: './portal.html',
+		  // storeConsentGlobally: false,
+		  // storePublisherData: false,
+		  // localization: {},
+		  // forceLocale: null,
+		  // allowedVendorIds: null
+		}
 
-		function checkCookieForConsent() {
-			console.log("cookie", document.cookie);
-			if (document.cookie.indexOf("gdpr_opt_in=1") >= 0) {
-				setTimeout(() => {
-					window.location.reload();
-				}, 0);
-			}
+		function onConsentChanged(result) {
+		  if (document.cookie.indexOf("gdpr_opt_in=1") < 0) {
+		    console.log("all:consent:failed", result);
+		    // window.location.reload();
+		  } else {
+		    console.log("all:consent:succeeded", result);
+		  }
 		}
 
 		cmp('init', config, (result) => {
-			if (result.consentRequired) {
-				if (result.errorMsg) {
-					console.log(result);
-					cmp('showConsentTool');
-					cmp('addEventListener', 'onSubmit', checkCookieForConsent);
-				}
-			}
+		  if (result.consentRequired) {
+		    if (result.errorMsg) {
+		      cmp('showConsentTool');
+		      cmp('addEventListener', 'onConsentChanged', onConsentChanged);
+		    } else {
+		      // consent achieved
+		      if (document.cookie.indexOf("gdpr_opt_in=1") >= 0) {
+		        console.log("cmp:init: all consent achieved", result);
+		      } else {
+		        console.log("cmp:init: only some consent achieved", result);
+		      }
+		    }
+		  } else {
+		    console.log("cmp:init: consent not required", result);
+		  }
 		});
   </script>
 </body>
@@ -203,6 +210,7 @@ cmp('showConsentTool');
 
 ## Events
 
+- `onConsentChanged` CUSTOM: triggers whenever consent has changed
 - `isLoaded`
 - `cmpReady`
 - `onSubmit`
@@ -210,6 +218,7 @@ cmp('showConsentTool');
 ### Examples
 
 ```
+cmp('addEventListener', 'onConsentChanged', (event) => console.log(event));
 cmp('addEventListener', 'onSubmit', (event) => console.log(event));
 ```
 

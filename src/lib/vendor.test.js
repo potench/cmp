@@ -3,6 +3,8 @@
 import { expect } from 'chai';
 import config from './config';
 
+config.pubVendorListLocation = '/.well-known/pubvendorsList.json';
+
 const {pubVendorListLocation} = config;
 jest.mock('./portal');
 const mockPortal = require('./portal');
