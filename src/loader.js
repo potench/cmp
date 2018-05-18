@@ -63,15 +63,22 @@
 									if (callback && typeof callback === "function") {
 										callback.apply(this, [{
 											hasConsented: false,
-											consentRequired: false
+											consentRequired: false,
+											gdprApplies: false
 										}]);
 									}
 									return log(parameter[logging], "CMP: gdprApplies turned off so no CMP loaded.");
 								}
-								(scriptEl = document.createElement(script)),
+
+								scriptEl = document.createElement(script);
 								scriptEl.async = 1;
 								scriptEl.src = parameter[scriptSrc];
-								document.body.appendChild(scriptEl);
+								scriptParentEl = document.getElementsByTagName(script)[0];
+								if (scriptParentEl && scriptParentEl.parentNode) {
+									scriptParentEl.parentNode.insertBefore(scriptEl, scriptParentEl);
+								} else {
+									document.body.appendChild(scriptEl);
+								}
 							}
 						}
 					};

@@ -85,6 +85,7 @@ const handleConsentResult = ({
 		writeCookie(GDPR_OPT_IN_COOKIE, hasConsented ? "1" : "0", GDPR_OPT_IN_COOKIE_MAX_AGE);
 		const consent = {
 			consentRequired: true,
+			gdprApplies: true,
 			hasConsented,
 			vendorList,
 			vendorConsentData,
