@@ -65,7 +65,7 @@ The CMP Loader provides a shim to the CMP SDK. Use the CMP Loader to queue comma
   }
 
   cmp('init', config, (result) => {
-    if (result.consentRequired) {
+    if (result.gdprApplies) {
       if (result.errorMsg) {
         cmp('showConsentTool');
         cmp('addEventListener', 'onConsentChanged', onConsentChanged);
@@ -151,7 +151,7 @@ cmp('init', config);
 Use the callback to determine if you should show the consent tool or not.
 
 - `errorMsg`: STRING // detail on the result CMP initializing
-- `consentRequired`: BOOLEAN // true if in EU, false if consent not required
+- `gdprApplies`: BOOLEAN // true if in EU, false if consent not required
 - `hasConsented`: BOOLEAN // true if use has consented to all permissions
 - `vendorConsents`: OBJECT
 - `vendorList`: OBJECT
@@ -167,12 +167,12 @@ cmp('init', {
   }, (result) => {
 
   // Consent is required and there was an error
-    if (result.consentRequired && result.errorMsg) {
+    if (result.gdprApplies && result.errorMsg) {
     cmp('showConsentTool');
     }
 
   // Consent is required and a user has not consented to all permissions
-  if (result.consentRequired && !result.hasConsented) {
+  if (result.gdprApplies && !result.hasConsented) {
   cmp('showConsentTool');
   }
 });
