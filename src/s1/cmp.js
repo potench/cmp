@@ -64,7 +64,7 @@ const handleConsentResult = ({
 	const { vendorListVersion: listVersion } = vendorList;
 	const { created, vendorListVersion } = vendorConsentData;
 	if (!created) {
-		errorMsg = 'No consent data found. Showing consent tool';
+		errorMsg = 'No consent data found. Show consent tool';
 	}
 	// if (vendorListVersion !== listVersion) {
 	// 	errorMsg = `Consent found for version ${vendorListVersion}, but received vendor list version ${listVersion}. Showing consent tool`;
@@ -82,7 +82,9 @@ const handleConsentResult = ({
 	if (callback && typeof callback === "function") {
 		// store as 1 or 0
 		const hasConsented = checkHasConsentedAll(vendorConsentData);
-		writeCookie(GDPR_OPT_IN_COOKIE, hasConsented ? "1" : "0", GDPR_OPT_IN_COOKIE_MAX_AGE);
+		if (created) {
+			writeCookie(GDPR_OPT_IN_COOKIE, hasConsented ? "1" : "0", GDPR_OPT_IN_COOKIE_MAX_AGE);
+		}
 		const consent = {
 			consentRequired: true,
 			gdprApplies: true,
