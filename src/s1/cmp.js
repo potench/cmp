@@ -95,7 +95,7 @@ const handleConsentResult = ({
 		};
 		callback.call(this, consent);
 
-		if (hasConsentedCookie !== undefined && hasConsented !== hasConsentedCookie) {
+		if (created && hasConsented !== hasConsentedCookie) {
 			cmp.notify('onConsentChanged', consent);
 		}
 	}

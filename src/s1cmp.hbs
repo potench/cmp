@@ -31,6 +31,7 @@
 		}
 
 		function onConsentChanged(result) {
+			console.log("onConsentChanged");
 			if (document.cookie.indexOf("gdpr_opt_in=1") < 0) {
 				console.log("all:consent:failed", result);
 				// window.location.reload();
