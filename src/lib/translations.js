@@ -7,7 +7,7 @@
 export default {
 	en: {
 		intro: {
-			title: '',
+			title: 'Privacy Choices',
 			description: 'By using this site, you agree to our use of cookies and information to provide personalized content and ads and measure and analyze site usage. Click "Learn More" to change your settings.',
 			acceptAll: 'Got it',
 			rejectAll: '',
