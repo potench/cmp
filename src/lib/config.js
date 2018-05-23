@@ -12,7 +12,7 @@ const defaultConfig = {
 	localization: {},
 	forceLocale: null,
 	gdprApplies: true,
-	allowedVendorIds: null
+	allowedVendorIds: [10, 52, 69, 13, 32, 36]
 };
 
 class Config {
