@@ -13,6 +13,23 @@ export default class Popup extends Component {
 		selectedPanelIndex: SECTION_INTRO
 	};
 
+	componentDidMount = () => {
+		document.onkeydown = this.onKeyDown;
+	}
+
+	componentWillUnmount = () => {
+		document.onkeydown = null;
+	}
+
+	onKeyDown = (evt) => {
+		evt = evt || window.event;
+		const {key = '', keyCode = ''} = evt;
+		const isEscape = (key === 'Escape' || key === 'Esc' || keyCode === 27);
+		if (isEscape) {
+			this.handleClose();
+		}
+	}
+
 	onAcceptAll = () => {
 		const { store, onSave } = this.props;
 		store.selectAllVendors(true);

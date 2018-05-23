@@ -31,11 +31,15 @@ export default class App extends Component {
 			store,
 		} = state;
 
+		const {isConsentToolShowing} = store;
+
 		return (
 			<div class={style.gdpr}>
-				<Popup store={store}
-					   onSave={this.onSave}
-				/>
+				{isConsentToolShowing &&
+					<Popup store={store}
+						   onSave={this.onSave}
+					/>
+				}
 				<Footer store={store} />
 			</div>
 		);
