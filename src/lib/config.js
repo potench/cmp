@@ -3,9 +3,11 @@ import log from './log';
 const defaultConfig = {
 	customPurposeListLocation: './purposes.json',
 	globalVendorListLocation: 'https://vendorlist.consensu.org/vendorlist.json',
+	pubVendorListLocation: null,
 	globalConsentLocation: './portal.html',
 	storeConsentGlobally: false,
 	storePublisherData: false,
+	scriptSrc: null,
 	logging: false,
 	localization: {},
 	forceLocale: null,

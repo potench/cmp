@@ -1,10 +1,10 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackInlineSourcePlugin from 'html-webpack-inline-source-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import path from 'path';
-import fs from 'fs';
-import UglifyJS from 'uglify-es';
+import fs from "fs";
 
 const ENV = process.env.NODE_ENV || 'development';
 
@@ -62,7 +62,7 @@ const commonConfig = {
 			{
 				test: /\.hbs/,
 				exclude: /node_modules/,
-				use: 'handlebars-loader'
+				use: "handlebars-loader"
 			},
 			{
 				test: /\.jsx?$/,
@@ -170,59 +170,76 @@ const commonConfig = {
 		https: false
 	}
 };
+/*
+module.exports = {
+// 	context: path.resolve(__dirname, 'src'),
+	module: {
+		rules: [
+			{
+				test: /\.js$/,
+				exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: ['env']
+					}
+				}
+			}
+		]
+	},
+	entry: {
+		s1cmp: './s1cmp.js'
+	},
+	output: {
+		path: path.resolve(__dirname, 'build'),
+		publicPath: './',
+		filename: '[name].bundle.js'
+	},
+	plugins: [new HtmlWebpackPlugin()]
+};
+*/
+
 
 module.exports = [
-	// // S1 Loader
-	// {
-	// 	context: path.resolve(__dirname, 'src'),
-	// 	entry: './loader.js',
-	// 	output: {
-	// 		path: path.resolve(__dirname, 'build'),
-	// 		publicPath: './',
-	// 		filename: 'loader.js'
-	// 	},
-	// 	plugins: [
-	// 		new webpack.optimize.UglifyJsPlugin({
-	// 			minimize: true,
-	// 			compress: { warnings: false }
-	// 		})
-	// 	]
-	// },
-	// S1 CMP
+	// S1 CMP config
 	{
 		entry: {
+			embed: './s1/embed',
 			cmp: './s1/cmp.js'
 		},
 		...commonConfig,
 		output: {
 			path: path.resolve(__dirname, 'build'),
 			publicPath: './',
-			filename: 's1.[name].js'
+			filename: 's1.[name].bundle.js'
 		},
-		plugins: [
+		plugins: ([
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(ENV)
 			}),
+			new webpack.optimize.CommonsChunkPlugin({
+		    name: "vendor",
+		    // filename: "vendor.js"
+		    // (Give the chunk a different name)
+
+		    minChunks: Infinity,
+		    // (with more entries, this ensures that no other module
+		    //  goes into the vendor chunk)
+		  }),
 			new HtmlWebpackPlugin({
+				title: 'poop',
 				filename: 's1cmp.html',
 				template: 's1cmp.hbs',
-				inject: false,
-				inline: UglifyJS.minify(fs.readFileSync('./src/loader.js', 'utf8')).code
+				// inline: fs.readFileSync('./src/s1cmp.js', 'utf8'),
+				// inject: true,
+				chunks: ['embed', 'cmp'],
+				inlineSource: '(embed)',
 			}),
-			new CopyWebpackPlugin([
-				{ from: 'assets', to: '.' },
-				{
-					from: 'loader.js',
-					to: '.',
-					transform(content) {
-						// Just want to uglify and copy this file over
-						return Promise.resolve(Buffer.from(UglifyJS.minify(content.toString()).code, 'utf8'));
-					}
-				}
-			])
-		].concat(ENV === 'production' ? uglifyPlugin : [])
+			new HtmlWebpackInlineSourcePlugin()
+		]).concat(ENV === 'production' ? uglifyPlugin : [uglifyPlugin]),
 	},
 	// CMP config
+	/*
 	{
 		entry: {
 			cmp: './index.js',
@@ -235,27 +252,27 @@ module.exports = [
 			filename: '[name].bundle.js'
 		},
 		...commonConfig,
-		plugins: [
+		plugins: ([
 			new webpack.NoEmitOnErrorsPlugin(),
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(ENV)
 			}),
 			new webpack.ProvidePlugin({
-				Promise: 'promise-polyfill'
+				'Promise': 'promise-polyfill'
 			}),
 			new HtmlWebpackPlugin({
 				filename: 'index.html',
 				template: 'index.html',
 				chunks: ['cmp']
-			})
-		].concat(ENV === 'production' ? uglifyPlugin : [])
+			}),
+		]).concat(ENV === 'production' ? uglifyPlugin : []),
 	},
 	// Docs config
 	{
 		entry: {
-			docs: './docs/index.jsx',
-			iframeExample: './docs/iframe/iframeExample.jsx',
-			portal: './docs/assets/portal.js'
+			'docs': './docs/index.jsx',
+			'iframeExample': './docs/iframe/iframeExample.jsx',
+			'portal': './docs/assets/portal.js'
 		},
 
 		output: {
@@ -264,13 +281,13 @@ module.exports = [
 			filename: '[name].bundle.js'
 		},
 		...commonConfig,
-		plugins: [
+		plugins: ([
 			new webpack.NoEmitOnErrorsPlugin(),
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(ENV)
 			}),
 			new webpack.ProvidePlugin({
-				Promise: 'promise-polyfill'
+				'Promise': 'promise-polyfill'
 			}),
 			new HtmlWebpackPlugin({
 				filename: 'index.html',
@@ -287,7 +304,10 @@ module.exports = [
 				template: './docs/assets/portal.html',
 				chunks: ['portal']
 			}),
-			new CopyWebpackPlugin([{ from: 'docs/assets', to: '.' }])
-		].concat(ENV === 'production' ? uglifyPlugin : [])
+			new CopyWebpackPlugin([
+				{ from: 'docs/assets', to: '.' },
+			])
+		]).concat(ENV === 'production' ? uglifyPlugin : []),
 	}
+	*/
 ];

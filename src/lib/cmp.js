@@ -14,6 +14,8 @@ export default class Cmp {
 		this.store = store;
 		this.processCommand.receiveMessage = this.receiveMessage;
 		this.commandQueue = [];
+
+		Object.assign(this, this.commands);
 	}
 
 	commands = {
@@ -200,16 +202,16 @@ export default class Cmp {
 		// Special case where we have the full CMP implementation loaded but
 		// we still queue these commands until there is data available. This
 		// behavior should be removed in future versions of the CMP spec
-		else if (
-			(!this.store.persistedVendorConsentData && (command === 'getVendorConsents' || command === 'getConsentData')) ||
-			(!this.store.persistedPublisherConsentData && command === 'getPublisherConsents')) {
-			log.info(`Queuing command: ${command} until consent data is available`);
-			this.commandQueue.push({
-				command,
-				parameter,
-				callback
-			});
-		}
+		// else if (
+		// 	(!this.store.persistedVendorConsentData && (command === 'getVendorConsents' || command === 'getConsentData')) ||
+		// 	(!this.store.persistedPublisherConsentData && command === 'getPublisherConsents')) {
+		// 	log.info(`Queuing command: ${command} until consent data is available`);
+		// 	this.commandQueue.push({
+		// 		command,
+		// 		parameter,
+		// 		callback
+		// 	});
+		// }
 		else {
 			log.info(`Proccess command: ${command}, parameter: ${parameter}`);
 			this.commands[command](parameter, callback);
@@ -222,7 +224,7 @@ export default class Cmp {
 	 * @param {*} data Data that will be passed to each callback
 	 */
 	notify = (event, data) => {
-		log.info(`Notify event: ${event}`);
+		log.info(`Notify event: ${event}`, data);
 		const eventSet = this.eventListeners[event] || new Set();
 		eventSet.forEach(listener => {
 			listener({event, data});

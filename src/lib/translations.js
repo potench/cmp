@@ -7,11 +7,11 @@
 export default {
 	en: {
 		intro: {
-			title: '',
-			description: '',
-			acceptAll: '',
+			title: 'Privacy Choices',
+			description: 'By using this site, you agree to our use of cookies and information to provide personalized content and ads and measure and analyze site usage. Click "Learn More" to change your settings.',
+			acceptAll: 'Got it',
 			rejectAll: '',
-			showPurposes: ''
+			showPurposes: 'Learn More'
 		},
 		details: {
 			title: '',
@@ -40,7 +40,7 @@ export default {
 				</ul>`
 			},
 			purpose3: {
-				description: `Allow processing of a user’s data to deliver content or advertisements and measure the delivery of such content or advertisements, extract insights and generate reports to understand service usage; and/or accessing or storing information on devices for that purpose.  
+				description: `Allow processing of a user’s data to deliver content or advertisements and measure the delivery of such content or advertisements, extract insights and generate reports to understand service usage; and/or accessing or storing information on devices for that purpose.
 				Will include following Features:
 				<ul>
 					<li>Matching Data to Offline Sources - combining data from offline sources that were initially collected in other contexts.</li>
@@ -49,7 +49,7 @@ export default {
 				</ul>`
 			},
 			purpose4: {
-				description: `Allow processing of a user’s data to provide and inform personalised content (including delivery, measurement, and reporting) based on a user’s preferences or interests known or inferred from data collected across multiple sites, apps, or devices; and/or accessing or storing information on devices for that purpose.  
+				description: `Allow processing of a user’s data to provide and inform personalised content (including delivery, measurement, and reporting) based on a user’s preferences or interests known or inferred from data collected across multiple sites, apps, or devices; and/or accessing or storing information on devices for that purpose.
 				Will include following Features:
 				<ul>
 					<li>Matching Data to Offline Sources - combining data from offline sources that were initially collected in other contexts.</li>
@@ -57,10 +57,8 @@ export default {
 					<li>Precise Geographic Location data - allow processing of a user’s precise geographic location data in support of a purpose for which that certain third party has consent.</li>
 				</ul>`
 			},
-			customPurpose1: {
-				menu: '',
-				title: '',
-				description: ''
+			purpose5: {
+				description: `The collection of information about your use of the content, and combination with previously collected information, used to measure, understand, and report on your usage of the service. This does not include personalisation, the collection of information about your use of this service to subsequently personalise content and/or advertising for you in other contexts, i.e. on other service, such as websites or apps, over time.`
 			}
 		},
 		vendors: {
