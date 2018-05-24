@@ -40,7 +40,7 @@
 			}
 		}
 
-		cmp('init', config, (result) => {
+		cmp('init', config, function (result) {
 			if (result.consentRequired) {
 				if (result.errorMsg) {
 					cmp('showConsentTool');
