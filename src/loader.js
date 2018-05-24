@@ -91,7 +91,7 @@
 	if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 		module.exports = cmpLoader(true);
 	} else if (typeof define === 'function' && define.amd) {
-		define([], () => {
+		define([], function() {
 			return cmpLoader(true);
 		});
 	} else {
