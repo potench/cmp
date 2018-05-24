@@ -1,4 +1,8 @@
 // __cmp('setConsentUiCallback', callback) QUANTCAST
+import 'core-js/fn/array/find-index';
+import 'core-js/fn/object/keys';
+import 'core-js/fn/array/find';
+
 import cmp from '../loader';
 import {init} from '../lib/init';
 import log from '../lib/log';
