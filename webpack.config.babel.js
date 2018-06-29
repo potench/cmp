@@ -3,42 +3,40 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import path from 'path';
-import fs from 'fs';
-import UglifyJS from 'uglify-es';
 
 const ENV = process.env.NODE_ENV || 'development';
 
 const CSS_MAPS = ENV !== 'production';
 
 const uglifyPlugin = new webpack.optimize.UglifyJsPlugin({
-	output: {
-		comments: false
-	},
-	compress: {
-		unsafe_comps: true,
-		properties: true,
-		keep_fargs: false,
-		pure_getters: true,
-		collapse_vars: true,
-		unsafe: true,
-		warnings: false,
-		screw_ie8: true,
-		sequences: true,
-		dead_code: true,
-		drop_debugger: true,
-		comparisons: true,
-		conditionals: true,
-		evaluate: true,
-		booleans: true,
-		loops: true,
-		unused: true,
-		hoist_funs: true,
-		if_return: true,
-		join_vars: true,
-		cascade: true,
-		drop_console: false
-	}
-});
+		output: {
+			comments: false
+		},
+		compress: {
+			unsafe_comps: true,
+			properties: true,
+			keep_fargs: false,
+			pure_getters: true,
+			collapse_vars: true,
+			unsafe: true,
+			warnings: false,
+			screw_ie8: true,
+			sequences: true,
+			dead_code: true,
+			drop_debugger: true,
+			comparisons: true,
+			conditionals: true,
+			evaluate: true,
+			booleans: true,
+			loops: true,
+			unused: true,
+			hoist_funs: true,
+			if_return: true,
+			join_vars: true,
+			cascade: true,
+			drop_console: false
+		}
+	});
 
 const commonConfig = {
 	context: path.resolve(__dirname, 'src'),
@@ -50,20 +48,15 @@ const commonConfig = {
 			'node_modules'
 		],
 		alias: {
-			components: path.resolve(__dirname, 'src/components'), // used for tests
+			components: path.resolve(__dirname, 'src/components'),    // used for tests
 			style: path.resolve(__dirname, 'src/style'),
-			react: 'preact-compat',
+			'react': 'preact-compat',
 			'react-dom': 'preact-compat'
 		}
 	},
 
 	module: {
 		rules: [
-			{
-				test: /\.hbs/,
-				exclude: /node_modules/,
-				use: 'handlebars-loader'
-			},
 			{
 				test: /\.jsx?$/,
 				exclude: path.resolve(__dirname, 'src'),
@@ -80,7 +73,7 @@ const commonConfig = {
 				test: /\.(less|css)$/,
 				include: [
 					path.resolve(__dirname, 'src/components'),
-					path.resolve(__dirname, 'src/docs/components')
+					path.resolve(__dirname, 'src/docs/components'),
 				],
 				use: [
 					{
@@ -115,7 +108,7 @@ const commonConfig = {
 				test: /\.(less|css)$/,
 				include: [
 					path.resolve(__dirname, 'src/docs/style'),
-					path.resolve(__dirname, 'node_modules/codemirror/lib/codemirror.css')
+					path.resolve(__dirname, 'node_modules/codemirror/lib/codemirror.css'),
 				],
 				use: [
 					{
@@ -172,56 +165,6 @@ const commonConfig = {
 };
 
 module.exports = [
-	// // S1 Loader
-	// {
-	// 	context: path.resolve(__dirname, 'src'),
-	// 	entry: './loader.js',
-	// 	output: {
-	// 		path: path.resolve(__dirname, 'build'),
-	// 		publicPath: './',
-	// 		filename: 'loader.js'
-	// 	},
-	// 	plugins: [
-	// 		new webpack.optimize.UglifyJsPlugin({
-	// 			minimize: true,
-	// 			compress: { warnings: false }
-	// 		})
-	// 	]
-	// },
-	// S1 CMP
-	{
-		entry: {
-			cmp: './s1/cmp.js'
-		},
-		...commonConfig,
-		output: {
-			path: path.resolve(__dirname, 'build'),
-			publicPath: './',
-			filename: 's1.[name].js'
-		},
-		plugins: [
-			new webpack.DefinePlugin({
-				'process.env.NODE_ENV': JSON.stringify(ENV)
-			}),
-			new HtmlWebpackPlugin({
-				filename: 's1cmp.html',
-				template: 's1cmp.hbs',
-				inject: false,
-				inline: UglifyJS.minify(fs.readFileSync('./src/loader.js', 'utf8')).code
-			}),
-			new CopyWebpackPlugin([
-				{ from: 'assets', to: '.' },
-				{
-					from: 'loader.js',
-					to: '.',
-					transform(content) {
-						// Just want to uglify and copy this file over
-						return Promise.resolve(Buffer.from(UglifyJS.minify(content.toString()).code, 'utf8'));
-					}
-				}
-			])
-		].concat(ENV === 'production' ? uglifyPlugin : [])
-	},
 	// CMP config
 	{
 		entry: {
@@ -235,27 +178,27 @@ module.exports = [
 			filename: '[name].bundle.js'
 		},
 		...commonConfig,
-		plugins: [
+		plugins: ([
 			new webpack.NoEmitOnErrorsPlugin(),
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(ENV)
 			}),
 			new webpack.ProvidePlugin({
-				Promise: 'promise-polyfill'
+				'Promise': 'promise-polyfill'
 			}),
 			new HtmlWebpackPlugin({
 				filename: 'index.html',
 				template: 'index.html',
 				chunks: ['cmp']
-			})
-		].concat(ENV === 'production' ? uglifyPlugin : [])
+			}),
+		]).concat(ENV === 'production' ? uglifyPlugin : []),
 	},
 	// Docs config
 	{
 		entry: {
-			docs: './docs/index.jsx',
-			iframeExample: './docs/iframe/iframeExample.jsx',
-			portal: './docs/assets/portal.js'
+			'docs': './docs/index.jsx',
+			'iframeExample': './docs/iframe/iframeExample.jsx',
+			'portal': './docs/assets/portal.js'
 		},
 
 		output: {
@@ -264,13 +207,13 @@ module.exports = [
 			filename: '[name].bundle.js'
 		},
 		...commonConfig,
-		plugins: [
+		plugins: ([
 			new webpack.NoEmitOnErrorsPlugin(),
 			new webpack.DefinePlugin({
 				'process.env.NODE_ENV': JSON.stringify(ENV)
 			}),
 			new webpack.ProvidePlugin({
-				Promise: 'promise-polyfill'
+				'Promise': 'promise-polyfill'
 			}),
 			new HtmlWebpackPlugin({
 				filename: 'index.html',
@@ -287,7 +230,9 @@ module.exports = [
 				template: './docs/assets/portal.html',
 				chunks: ['portal']
 			}),
-			new CopyWebpackPlugin([{ from: 'docs/assets', to: '.' }])
-		].concat(ENV === 'production' ? uglifyPlugin : [])
+			new CopyWebpackPlugin([
+				{ from: 'docs/assets', to: '.' }
+			])
+		]).concat(ENV === 'production' ? uglifyPlugin : []),
 	}
 ];
