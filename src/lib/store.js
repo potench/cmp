@@ -61,7 +61,7 @@ export default class Store {
 		this.pubVendorsList = pubVendorsList;
 		this.allowedVendorIds = new Set(allowedVendorIds);
 		this.isConsentToolShowing = false;
-		this.isFooterShowing = false;
+		this.isBannerShowing = false;
 
 		this.updateVendorList(vendorList);
 		this.updateCustomPurposeList(customPurposeList);
@@ -226,6 +226,7 @@ export default class Store {
 
 		// Update version of list to one we are using
 		vendorConsentData.vendorListVersion = vendorListVersion;
+		publisherConsentData.vendorListVersion = vendorListVersion;
 
 		publisherConsentData.created = publisherConsentData.created || now;
 		publisherConsentData.lastUpdated = now;
@@ -236,7 +237,8 @@ export default class Store {
 		// Write publisher cookie if enabled
 		if (config.storePublisherData) {
 			writePublisherConsentCookie({
-				...vendorConsentData, ...publisherConsentData,
+				...vendorConsentData,
+				...publisherConsentData,
 				vendorList,
 				customPurposeList
 			});
@@ -319,20 +321,26 @@ export default class Store {
 	};
 
 	toggleConsentToolShowing = (isShown) => {
-		this.isConsentToolShowing = typeof isShown === 'boolean' ? isShown : !this.isConsentToolShowing;
+		this.isBannerShowing = typeof isShown === 'boolean' ? isShown : !this.isBannerShowing;
+		this.isModalShowing = false;
 		this.isFooterShowing = false;
+		this.storeUpdate();
+	};
+
+	toggleModalShowing = (isShown) => {
+		this.isModalShowing = typeof isShown === 'boolean' ? isShown : !this.isModalShowing;
 		this.storeUpdate();
 	};
 
 	toggleFooterShowing = (isShown) => {
 		this.isFooterShowing = typeof isShown === 'boolean' ? isShown : !this.isFooterShowing;
-		this.isConsentToolShowing = false;
+		this.isModalShowing = false;
 		this.storeUpdate();
 	};
 
 	updateVendorList = vendorList => {
+
 		const {
-			pubVendorsList = {},
 			allowedVendorIds
 		} = this;
 
@@ -341,15 +349,9 @@ export default class Store {
 			maxVendorId = 0
 		} = this.vendorConsentData;
 
-		if (vendorList) {
-			// Filter vendors in vendorList by allowedVendorIds
-			if (vendorList.vendors && allowedVendorIds.size) {
-				vendorList.vendors = vendorList.vendors.filter(({id}) => allowedVendorIds.has(id));
-			}
-
-			// If a pubVendorList is applied make the vendor list version = 0
-			const { publisherVendorsVersion } = pubVendorsList;
-			vendorList.vendorListVersion = publisherVendorsVersion ? 0 : vendorList.vendorListVersion;
+		// Filter vendors in vendorList by allowedVendorIds
+		if (vendorList && vendorList.vendors && allowedVendorIds.size) {
+			vendorList.vendors = vendorList.vendors.filter(({id}) => allowedVendorIds.has(id));
 		}
 
 		const {
